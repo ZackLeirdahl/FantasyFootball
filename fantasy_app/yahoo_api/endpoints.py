@@ -1,4 +1,4 @@
-from utils import format_ids_to_keys
+from fantasy_app.yahoo_api.utils import format_ids_to_keys
 
 def league():
     return 'https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.98349'
@@ -32,5 +32,3 @@ def team_roster_players(team_id):
 
 def players_by_key(player_ids):
     return 'https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys='+','.join(format_ids_to_keys(player_ids))
-
-print('zack')

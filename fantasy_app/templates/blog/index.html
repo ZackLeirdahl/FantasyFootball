@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Posts{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('blog.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for post in posts %}
+    <article class="post">
+      <header>
+        <div>
+        {% if g.user['id'] == post['author_id'] %}
+          <a class= "post_header" href="{{ url_for('blog.update', id=post['id']) }}">{{ post['title'] }}</a>
+        {% else %}
+          <a class= "post_header" href="{{ url_for('blog.view', id=post['id']) }}">{{ post['title'] }}</a>
+        {% endif %}
+        {% for posttime in posttimes %}
+          {% if posttime['id'] == post['id'] %}
+            <div class="about">{{ post['name'] }} - {{ posttime['time'] }}</div>
+          {% endif %}
+        {% endfor %}
+        </div>
+      </header>
+      <p class="body"><br>{{ post['body'] }} <br></p>
+      <nav class="about">
+        <ul class="post_options">
+          <li><a data-toggle="tooltip" data-placement="top" title="Comment" href="{{ url_for('blog.comment', id=post['id']) }}"><img src="/static/images/reply.png" width="20", height="20"/></a></li>
+          <li><a href="#" id="com" onclick="toggle_visibility('{{post['title']}}')"><img src="/static/images/comment.png" width="20", height="20"/></a></li>
+          <li>{{ post['comments'] }}</li>
+        {% if post['id'] not in g.user_likes %}
+          <li><a class="about" href="{{ url_for('blog.like', id=post['id'], action=1) }}"><img src="/static/images/like.png" width="20", height="20"/></a></li>
+        {% else %}
+          <li><a class="about" href="{{ url_for('blog.like', id=post['id'], action=0) }}"><img src="/static/images/liked.png" width="20", height="20"/></a></li>
+        {% endif %}
+          <li>{{ post['likes'] }}</li>
+        {% if post['id'] not in g.user_dislikes %}
+          <li><a class="about" href="{{ url_for('blog.dislike', id=post['id'], action=1) }}"><img src="/static/images/dislike.png" width="20", height="20"/></a></li>
+        {% else %}
+          <li><a class="about" href="{{ url_for('blog.dislike', id=post['id'], action=0) }}"><img src="/static/images/disliked.png" width="20", height="20"/></a></li>
+        {% endif %}
+          <li>{{ post['dislikes'] }}</li>
+        </ul>
+      </nav>
+      <div class="comment" id="{{ post['title'] }}" style="display: none" >
+        {% for comment in comments %}
+          {% if comment['postid'] == post['id'] %}
+            {% for commenttime in commenttimes %}
+              {% if commenttime['id'] == comment['id'] %}
+              <p class="about">{{ comment['name'] }} - {{ commenttime['time'] }}</p>
+              {% endif %}
+            {% endfor %}
+            <p class="body">{{ comment['comment'] }}</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+
+
+{% endblock %}

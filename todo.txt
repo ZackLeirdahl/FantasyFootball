@@ -1,0 +1,5 @@
+- delete comment
+- view post (with comments and likes)
+- show users who liked/ disliked/ commented on hover
+- refactor yahoo_api
+- refactor forms
