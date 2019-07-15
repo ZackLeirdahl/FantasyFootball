@@ -1,7 +1,8 @@
-import sqlite3, click
+import sqlite3, click, firebase_admin, os
 from flask import current_app, g
 from flask.cli import with_appcontext
-
+from firebase_admin import credentials, firestore
+from firebase_admin import db as fb
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(current_app.config['DATABASE'], detect_types=sqlite3.PARSE_DECLTYPES)
@@ -27,3 +28,10 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+def get_fdb():
+    if (not len(firebase_admin._apps)):
+        firebase_admin.initialize_app(credentials.Certificate(os.path.dirname(__file__) + r'\static\auth\firebase_auth.json'),options= {'databaseURL': 'https://fantasyfootball-ee95c.firebaseio.com'})
+    if 'fb' not in g:
+        g.fb = firestore.client()
+    return g.fb

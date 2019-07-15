@@ -1,5 +1,29 @@
 - delete comment
 - view post (with comments and likes)
-- show users who liked/ disliked/ commented on hover
-- refactor yahoo_api
 - refactor forms
+- team elements to include:
+    - waiver priority
+    - number of moves
+- make remember me work
+- sign in on register
+- different content forms:
+    - Text
+    - Video
+    - Image
+    - Poll
+    - Bets
+
+- change index to feed
+- feed methods:
+    - New (each has their own form, and their own card)
+        - post
+        - Video
+        - Image
+        - wager
+        - Poll
+- click on the card and it flips to the comment page, click again and flips again
+    - comment button also flips card
+- matchups page
+    - main view has user's matchup
+    - click on other matchups and they toggle on the same page
+- create method to get which week of the season it is

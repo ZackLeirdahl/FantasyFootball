@@ -7,7 +7,9 @@ CREATE TABLE user (
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   image TEXT NULL,
-  name TEXT NULL
+  name TEXT NULL,
+  nickname TEXT NULL,
+  teamid TEXT NULL
 );
 
 CREATE TABLE post (

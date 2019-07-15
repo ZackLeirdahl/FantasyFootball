@@ -13,7 +13,7 @@ get_comments_count = 'select COUNT(*) from post_comments where postid = ?'
 get_post_likes = 'SELECT distinct userid FROM user_likes WHERE postid = ?'
 
 #Insert
-insert_user = 'INSERT INTO user (username, password, image, name) VALUES (?, ?, ?, ?)'
+insert_user = 'INSERT INTO user (username, password, image, name, nickname, teamid) VALUES (?, ?, ?, ?, ?, ?)'
 insert_post = 'INSERT INTO post (title, body, author_id, likes, dislikes, comments)'' VALUES (?, ?, ?, ?, ?, ?)'
 insert_user_like = 'INSERT INTO user_likes (userid, postid, liked, disliked)''Values (?,?,?,?)'
 insert_post_comment = 'INSERT INTO post_comments (postid, userid, name, comment)''Values (?,?,?,?)'
@@ -28,3 +28,5 @@ update_user_likes_dislike = 'UPDATE user_likes SET disliked = 1, liked = 0 WHERE
 
 #Delete
 delete_post = 'DELETE FROM post WHERE id = ?'
+delete_user_likes = 'DELETE FROM user_likes WHERE postid = ?'
+delete_post_comments = 'DELETE FROM post_comments WHERE postid = ?'

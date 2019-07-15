@@ -1,4 +1,4 @@
-import os
+import os, firebase_admin
 from flask import Flask
 
 def create_app(test_config=None):
@@ -8,7 +8,7 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
-    
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
@@ -25,10 +25,11 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    from .blueprints import auth, blog, profile
+    from .blueprints import auth, blog, profile, matchups
     app.register_blueprint(auth.bp)
     app.register_blueprint(profile.bp)
     app.register_blueprint(blog.bp)
+    app.register_blueprint(matchups.bp)
     app.add_url_rule('/', endpoint='index')
 
     return app

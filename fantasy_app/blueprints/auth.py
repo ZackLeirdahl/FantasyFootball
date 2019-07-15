@@ -1,10 +1,11 @@
 import functools
 from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for)
 from werkzeug.security import check_password_hash, generate_password_hash
-from fantasy_app.db import get_db
-from fantasy_app.forms import LoginForm, RegisterForm
-from fantasy_app.const import *
-from fantasy_app.yahoo_api.yaccess import YAccess
+from ..db import get_db, get_fdb
+from ..forms import LoginForm, RegisterForm
+from ..const import *
+from ..util import get_yahoo_user
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.before_app_request
@@ -22,10 +23,9 @@ def load_logged_in_user():
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    form = RegisterForm()
     if request.method == 'POST':
-        username = form.username.data
-        password = form.password.data
+        username = request.form['username']
+        password = request.form['password']
         db = get_db()
         error = None
         if not username:
@@ -35,33 +35,27 @@ def register():
         elif db.execute(get_user_by_username, (username,)).fetchone() is not None:
             error = 'User {} is already registered.'.format(username)
         if error is None:
-            y = YAccess()
-            ydata = y.get_user_data(username)
-            db.execute(insert_user,(username, generate_password_hash(password),ydata['image'],ydata['name']))
+            user = get_yahoo_user(username)
+            db.execute(insert_user,(username, generate_password_hash(password),user['image'],user['name'], user['nickname'], user['teamid']))
             db.commit()
             return redirect(url_for('auth.login'))
         flash(error)
-    return render_template('auth/register.html',title='Register', form=form)
+    return render_template('auth/register.html')
 
 @bp.route('/login', methods=('GET', 'POST'))
-def login():
-    form = LoginForm()
+def login(error = None):
     if request.method == 'POST':
-        username = form.username.data
-        password = form.password.data
-        db = get_db()
-        error = None
-        user = db.execute(get_user_by_username, (username,)).fetchone()
+        user = get_db().execute(get_user_by_username, (request.form['username'],)).fetchone()
         if user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
+        elif not check_password_hash(user['password'], request.form['password']):
             error = 'Incorrect password.'
         if error is None:
             session.clear()
             session['user_id'] = user['id']
             return redirect(url_for('index'))
         flash(error)
-    return render_template('auth/login.html',title='Log In', form=form)
+    return render_template('auth/login.html')
 
 @bp.route('/logout')
 def logout():

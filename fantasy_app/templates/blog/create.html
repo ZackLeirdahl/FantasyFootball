@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>New Post</h1>
-<form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <p>{{ form.title.label }}<br>{{ form.title(size=32) }}</p>
-    <p>{{ form.body.label }}<br>{{ form.body(size=32) }}</p>
-    <p>{{ form.submit() }}</p>
+<form method="post" novalidate>
+    <div class="form-group-first">
+        <label for="titleInput">Title</label>
+        <input name="title" type="text" class ="form-control" id="titleInput" />
+    </div>
+    <div class="form-group">
+        <label for="postBody">Body</label>
+        <textarea name="body" class="form-control" id="postBody" rows="3"></textarea>
+    </div>
+    <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% endblock %}

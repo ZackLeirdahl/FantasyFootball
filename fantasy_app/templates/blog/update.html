@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
-
-{% block header %}
-  <h1>{% block title %}Edit "{{ post['title'] }}"{% endblock %}</h1>
-{% endblock %}
 {% block content %}
-  <form action="" method="post" novalidate>
-      {{ form.hidden_tag() }}
-      <p>{{ form.title.label }}<br>{{ form.title(size=32) }}</p>
-      <p>{{ form.body.label }}<br>{{ form.body(size=32) }}</p>
-      <p>{{ form.submit() }}</p>
-  </form>
-  <form action="{{ url_for('blog.delete', id=post['id']) }}" method="post">
-      <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-  </form>
+<form method="post" novalidate>
+    <div class="form-group-first">
+        <label  for="titleInput">Title</label>
+        <input name="title" type="text" class ="form-control" id="titleInput" value="{{ post.title }}">
+    </div>
+    <div class="form-group">
+        <label for="postBody">Body</label>
+        <textarea name="body" class="form-control" id="postBody" rows="3">{{post.body}}</textarea>
+    </div>
+    <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Save</button>
+    <form action="{{ url_for('blog.delete', id=post['id']) }}" method="post">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</button>
+    </form>
+</form>
+
 {% endblock %}

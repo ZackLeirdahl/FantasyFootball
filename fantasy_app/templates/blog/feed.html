@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+  {% if g.user %}
+  <div class="dropdown">
+        <button class="btn btn-neutral" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="/static/images/create.png"/>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{ url_for('blog.create') }}">Post</a>
+            <a class="dropdown-item" href="{{ url_for('blog.upload') }}">Media</a>
+            <a class="dropdown-item" href="#">Poll</a>
+            <a class="dropdown-item" href="#">Wager</a>
+        </div>
+      </div>
+  {% endif %}
+  {% for post in posts %}
+    <article class="post">
+      <div class="card" style="width: 30rem; margin-left: 10px;">
+        <div class="card-body">
+            <h4 class="card-title">
+              {% if g.user['id'] == post['author_id'] %}
+                <a class= "post_header" href="{{ url_for('blog.update', id=post['id']) }}">{{ post['title'] }}</a>
+              {% else %}
+                <a class= "post_header" href="#">{{ post['title'] }}</a>
+              {% endif %}
+            </h4>
+            <h6 class="card-subtitle mb-2 text-muted">
+              {% for posttime in posttimes %}
+                {% if posttime['id'] == post['id'] %}
+                  {{ post['name'] }} - {{ posttime['time'] }}
+                {% endif %}
+              {% endfor %}
+            </h6>
+            <p class="card-text">{{ post['body'] }}</p>
+            <button class="btn btn-just-icon btn-link">
+              {% if post['id'] not in g.user_likes %}
+                <a data-toggle="tooltip" data-placement="top" title ="{{ post['likes'] }}" href="{{ url_for('blog.like', id=post['id'], action=1) }}">
+                  <img src="/static/images/like.png" width="20", height="20"/>
+                </a>
+              {% else %}
+                <a data-toggle="tooltip" data-placement="top" title ="{{ post['likes'] }}" href="{{ url_for('blog.like', id=post['id'], action=0) }}">
+                  <img src="/static/images/liked.png" width="20", height="20"/>
+                </a>
+              {% endif %}
+            </button>
+            <button class="btn btn-just-icon btn-link">
+              {% if post['id'] not in g.user_dislikes %}
+                <a data-toggle="tooltip" data-placement="top" title ="{{ post['dislikes'] }}"  href="{{ url_for('blog.dislike', id=post['id'], action=1) }}">
+                  <img src="/static/images/dislike.png" width="20", height="20"/>
+                </a>
+              {% else %}
+                <a data-toggle="tooltip" data-placement="top" title ="{{ post['dislikes'] }}"  href="{{ url_for('blog.dislike', id=post['id'], action=0) }}">
+                  <img src="/static/images/disliked.png" width="20", height="20"/>
+                </a>
+              {% endif %}
+            </button>
+            <button class="btn btn-just-icon btn-link">
+              <a href="#{{ post['title'].replace(' ','') }}" data-toggle="collapse" aria-expanded="false" aria-controls="{{ post['title'].replace(' ','') }}">
+                <img src="/static/images/reply.png" width="20", height="20"/>
+              </a>
+            </button>
+          </div>
+        </div>
+        <div class="collapse" id="{{ post['title'].replace(' ','') }}">
+          <div class="card" style="width: 30rem; margin-left: 10px;">
+            <div class="card-block">
+              <div class="row">
+                <div class="col-lg-6">
+                  <form method="post" novalidate>
+                    <div class="form-group-first">
+                      <textarea name="comment" class="form-control" id="comment-box" rows="3"></textarea>
+                    </div>
+                    <input type="hidden" name="id" value="{{post['id']}}">
+                    <button style="margin-left: 15px; margin-bottom: 10px;" type="submit" class="btn btn-primary">Save</button>
+                  </form>
+                </div>
+                <div class="col-lg-4 offset-lg-1">
+                {% for comment in comments %}
+                 {% if comment['postid'] == post['id'] %}
+                  <div class="row">
+                  {% for commenttime in commenttimes %}
+                   {% if commenttime['id'] == comment['id'] %}
+                    <h6 class="card-subtitle mb-2 text-muted">{{ comment['name'] }} - {{ commenttime['time'] }}</h6><br>
+                   {% endif %}
+                  {% endfor %}     
+                    <p class="card-text">{{ comment['comment'] }}</p>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  {% endfor %}
+{% endblock %}

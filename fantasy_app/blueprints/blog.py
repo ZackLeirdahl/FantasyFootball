@@ -1,11 +1,11 @@
-import datetime, time
+import datetime, time, uuid
 from flask import (Blueprint, flash, g, redirect, render_template, request, url_for, current_app)
 from werkzeug.exceptions import abort
-from fantasy_app.blueprints.auth import login_required
-from fantasy_app.db import get_db
-from fantasy_app.forms import CreatePostForm, PostCommentForm, UpdatePostForm, ViewPostForm
-from fantasy_app.const import *
-from fantasy_app.util import *
+from .auth import login_required
+from ..db import get_db, get_fdb
+from ..forms import CreatePostForm, PostCommentForm, ViewPostForm
+from ..const import *
+from ..util import *
 bp = Blueprint('blog', __name__)
 
 @bp.route('/')
@@ -17,25 +17,44 @@ def index():
     commenttimes = [{'id': comments[i][0], 'time': get_posttime_data(time.mktime(datetime.datetime.today().timetuple()) + 18000 - time.mktime(comments[i][5].timetuple()))} for i in range(len(comments))]
     return render_template('blog/index.html', posts=posts, posttimes=posttimes, comments=comments, commenttimes=commenttimes)
 
+@bp.route('/feed', methods=('GET', 'POST'))
+def feed():
+    if request.method == "POST":
+        db = get_db()
+        comment = request.form['comment']
+        id = request.form['id']
+        error = None
+        if not comment:
+            error = 'Title is required.'
+        if error is not None:
+            flash(error)
+        else:
+            db.execute(insert_post_comment,(id, g.user['id'],g.user['name'], comment))
+            db.commit()
+            db.execute(update_post_comments,(id,))
+            db.commit()
+        return redirect(url_for('blog.feed'))
+    db = get_db()
+    posts=db.execute(get_posts).fetchall()
+    posttimes = [{'id': posts[i][0], 'time': get_posttime_data(time.mktime(datetime.datetime.today().timetuple()) + 18000 - time.mktime(posts[i][3].timetuple()))} for i in range(len(posts))]
+    comments = db.execute(get_comments).fetchall()
+    commenttimes = [{'id': comments[i][0], 'time': get_posttime_data(time.mktime(datetime.datetime.today().timetuple()) + 18000 - time.mktime(comments[i][5].timetuple()))} for i in range(len(comments))]
+    return render_template('blog/feed.html', posts=posts, posttimes=posttimes, comments=comments, commenttimes=commenttimes)
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
-def create():
-    form = CreatePostForm()
+def create(error = None):
     if request.method == 'POST':
-        title = form.title.data
-        body = form.body.data
-        error = None
-        if not title:
+        if not request.form['title']:
             error = 'Title is required.'
         if error is not None:
             flash(error)
         else:
             db = get_db()
-            db.execute(insert_post,(title, body, g.user['id'], 0, 0, 0))
+            db.execute(insert_post,(request.form['title'],request.form['body'],g.user['id'], 0, 0, 0))
             db.commit()
             return redirect(url_for('blog.index'))
-
-    return render_template('blog/create.html', title='New Post', form=form)
+    return render_template('blog/create.html')
 
 def get_post(id, check_author=True):
     post = get_db().execute('SELECT p.id, title, body, created, author_id, name, likes, dislikes, comments FROM post p JOIN user u ON p.author_id = u.id WHERE p.id = ?',(id,)).fetchone()
@@ -51,43 +70,34 @@ def get_post(id, check_author=True):
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    post = get_post(id)
-    form = UpdatePostForm()
     if request.method == 'POST':
-        title = form.title.data
-        body = form.body.data
-        error = None
-        if not title:
-            error = 'Title is required.'
-        if error is not None:
-            flash(error)
+        if not request.form['title']:
+            flash('Title is required.')
         else:
             db = get_db()
-            db.execute(update_post,(title, body, id))
+            db.execute(update_post,(request.form['title'], request.form['body'], id))
             db.commit()
             return redirect(url_for('blog.index'))
-    form.body.data = post['body']
-    form.title.data = post['title']
-    return render_template('blog/update.html', post=post, form=form)
+    return render_template('blog/update.html', post=get_post(id))
 
-@bp.route('/<int:id>/view', methods=('GET', 'POST'))
-def view(id):
-    post = get_post(id)
-    form = ViewPostForm()
-    if request.method == 'POST':
-        return redirect(url_for('blog.index'))
-    form.body.data = post['body']
-    form.title.data = post['title']
-    return render_template('blog/view.html', post=post, form=form)
-
-@bp.route('/<int:id>/delete', methods=('POST',))
+@bp.route('/<int:id>/delete', methods=('POST','GET'))
 @login_required
 def delete(id):
     get_post(id)
     db = get_db()
     db.execute(delete_post, (id,))
+    db.execute(delete_post_comments, (id,))
+    db.execute(delete_user_likes, (id,))
     db.commit()
     return redirect(url_for('blog.index'))
+""" 
+@bp.route('/<int:id>/delete_comment', methods=('POST',))
+@login_required
+def delete_comment(id):
+    db = get_db()
+    db.execute(delete_comment, (id,))
+    db.commit()
+    return redirect(url_for('blog.index')) """
 
 def set_likes_data(id):
     db = get_db()
@@ -133,22 +143,16 @@ def dislike(id, action):
     set_likes_data(id)
     return redirect(url_for('blog.index'))
 
-@bp.route('/<int:id>/comment', methods=('GET','POST'))
+
+@bp.route('/upload', methods=('GET', 'POST'))
 @login_required
-def comment(id):
-    form = PostCommentForm()
+def upload():
     if request.method == "POST":
-        db = get_db()
-        comment = form.comment.data
-        error = None
-        if not comment:
-            error = 'Title is required.'
-        if error is not None:
-            flash(error)
+        description = request.form['description']
+        file = request.form['file']
+        if not file:
+            flash('Image is required.')
         else:
-            db.execute(insert_post_comment,(id, g.user['id'],g.user['name'], comment))
-            db.commit()
-            db.execute(update_post_comments,(id,))
-            db.commit()
-        return redirect(url_for('blog.index'))
-    return render_template('blog/comment.html', form=form)
+            add_document('post_image', str(g.user['id']) + '_' + str(uuid.uuid1())[:8], {'file': file , 'description': description })
+            return redirect(url_for('blog.index'))
+    return render_template('blog/upload.html')
