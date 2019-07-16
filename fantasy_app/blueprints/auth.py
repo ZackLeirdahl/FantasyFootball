@@ -2,7 +2,6 @@ import functools
 from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for)
 from werkzeug.security import check_password_hash, generate_password_hash
 from ..db import get_db, get_fdb
-from ..forms import LoginForm, RegisterForm
 from ..const import *
 from ..util import get_yahoo_user
 
@@ -36,7 +35,7 @@ def register():
             error = 'User {} is already registered.'.format(username)
         if error is None:
             user = get_yahoo_user(username)
-            db.execute(insert_user,(username, generate_password_hash(password),user['image'],user['name'], user['nickname'], user['teamid']))
+            db.execute(insert_user,(username, generate_password_hash(password),user['image'],user['name'], user['nickname'], user['team_id']))
             db.commit()
             return redirect(url_for('auth.login'))
         flash(error)

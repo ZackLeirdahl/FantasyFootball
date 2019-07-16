@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="card no-transition">
+            {% for matchup in matchups %}
+            <div class="card-header card-collapse" role="tab" id="headingOne">
+                <h5 class="mb-0 panel-title">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#{{matchup[0]['nickname']}}" aria-expanded="false" aria-controls="{{matchup[0]['nickname']}}">
+                        <img src="{{ matchup[0]['image'] }}" id="round" />
+                        {{ matchup[0]['name'] }}  {{ matchup[0]['team_points'] }}
+                        <img src="{{ matchup[1]['image'] }}" id="round" />
+                        {{ matchup[1]['name'] }}  {{ matchup[1]['team_points'] }}
+                    </a>
+                </h5>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{matchup[0]['percent_chance']}}">{{matchup[0]['percent_chance']}} chance</div>
+                    <div class="progress-bar bg-info" role="progressbar" style="width: {{matchup[1]['percent_chance']}}">{{matchup[1]['percent_chance']}} chance</div>
+                </div>
+            </div>
+            <div id="{{matchup[0]['nickname']}}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Stats</th>
+                                        <th scope="col">Player</th>
+                                        <th scope="col">Projected</th>
+                                        <th scope="col">Points</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td>Alfreds Futterkiste</td>
+                                    <td>Maria Anders</td>
+                                    <td>Germany</td>
+                                    <td>United States</td>
+                                </tr>
+                            </table>          
+                        </div>
+                        <div class="col-lg-5 offset-lg-1">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Stats</th>
+                                        <th scope="col">Player</th>
+                                        <th scope="col">Projected</th>
+                                        <th scope="col">Points</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td>Alfreds Futterkiste</td>
+                                    <td>Maria Anders</td>
+                                    <td>Germany</td>
+                                    <td>United States</td>
+                                </tr>
+                            </table>          
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

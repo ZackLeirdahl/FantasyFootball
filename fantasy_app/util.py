@@ -39,7 +39,7 @@ def get_yahoo_user(username):
     return None
 
 def get_matchups():
-    team_stats = {}
+    team_stats = []
     matchups = []
     week = get_week()
     teams = get_documents('team')
@@ -48,11 +48,28 @@ def get_matchups():
         if k[len(week)] == week:
             team_ids = k.split('-')[1:3]
             matchups.append(team_ids)
+            temp_matchup = []
             for team_id in team_ids:
-                team_stats[team_id] = v[team_id]
-                team_stats[team_id].update(teams[team_id])
-    return pd.DataFrame(team_stats)
+                temp = v[team_id]
+                temp.update(teams[team_id])
+                temp_matchup.append(temp)
+            team_stats.append(temp_matchup)
+    for ts in team_stats:
+        ts[0]['percent_chance'] = str(ts[0]['win_probability'] * 100) +'%'
+        ts[1]['percent_chance'] = str(ts[1]['win_probability'] * 100) +'%'
+    return team_stats
 
 
 def get_week():
     return '1'
+
+def get_standings():
+    standings = []
+    data = get_documents('standings')
+    teams = get_documents('team')
+    for k,v in data.items():
+        temp = v
+        temp.update(teams[k])
+        standings.append(temp)
+    return standings
+    

@@ -3,7 +3,6 @@ from flask import (Blueprint, flash, g, redirect, render_template, request, url_
 from werkzeug.exceptions import abort
 from .auth import login_required
 from ..db import get_db, get_fdb
-from ..forms import CreatePostForm, PostCommentForm, ViewPostForm
 from ..const import *
 from ..util import *
 bp = Blueprint('blog', __name__)
@@ -53,18 +52,15 @@ def create(error = None):
             db = get_db()
             db.execute(insert_post,(request.form['title'],request.form['body'],g.user['id'], 0, 0, 0))
             db.commit()
-            return redirect(url_for('blog.index'))
+            return redirect(url_for('blog.feed'))
     return render_template('blog/create.html')
 
 def get_post(id, check_author=True):
     post = get_db().execute('SELECT p.id, title, body, created, author_id, name, likes, dislikes, comments FROM post p JOIN user u ON p.author_id = u.id WHERE p.id = ?',(id,)).fetchone()
     if post is None:
         abort(404, "Post id {0} doesn't exist.".format(id))
-    try:
-        if check_author and post['author_id'] != g.user['id']:
-            abort(403)
-    except:
-        return post
+    if check_author and post['author_id'] != g.user['id']:
+        abort(403)
     return post
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
@@ -86,18 +82,9 @@ def delete(id):
     get_post(id)
     db = get_db()
     db.execute(delete_post, (id,))
-    db.execute(delete_post_comments, (id,))
-    db.execute(delete_user_likes, (id,))
     db.commit()
-    return redirect(url_for('blog.index'))
-""" 
-@bp.route('/<int:id>/delete_comment', methods=('POST',))
-@login_required
-def delete_comment(id):
-    db = get_db()
-    db.execute(delete_comment, (id,))
-    db.commit()
-    return redirect(url_for('blog.index')) """
+    return redirect(url_for('blog.feed'))
+
 
 def set_likes_data(id):
     db = get_db()
@@ -123,7 +110,7 @@ def like(id, action):
             db.execute(update_user_likes_unlike,(g.user['id'], id,))
             db.commit()
     set_likes_data(id)
-    return redirect(url_for('blog.index'))
+    return redirect(url_for('blog.feed'))
 
 @bp.route('/<int:id>/<int:action>/dislike', methods=('GET','POST'))
 @login_required
@@ -141,8 +128,7 @@ def dislike(id, action):
             db.execute(update_user_likes_unlike,(g.user['id'], id,))
             db.commit()
     set_likes_data(id)
-    return redirect(url_for('blog.index'))
-
+    return redirect(url_for('blog.feed'))
 
 @bp.route('/upload', methods=('GET', 'POST'))
 @login_required
@@ -154,5 +140,5 @@ def upload():
             flash('Image is required.')
         else:
             add_document('post_image', str(g.user['id']) + '_' + str(uuid.uuid1())[:8], {'file': file , 'description': description })
-            return redirect(url_for('blog.index'))
+            return redirect(url_for('blog.feed'))
     return render_template('blog/upload.html')

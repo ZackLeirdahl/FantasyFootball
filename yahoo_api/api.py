@@ -68,3 +68,33 @@ class YahooFantasyAPI:
                     details[team_id][k] = v
         matchup_key += '-' + details['week_start'][:4]
         return [matchup_key, details]
+
+    def get_player_description(self, player_id = '25712'):
+        data = self.session_request(players_by_key([player_id]))
+        print(data)
+    
+    def get_player_stats(self, player_id = '29396'):
+        data = self.session_request(players_stats_by_key([player_id]))
+        print(data)
+
+    def get_standings(self):
+        data = self.session_request(league_standings())['fantasy_content']['league'][1]['standings'][0]['teams']
+        standings = {}
+        for k, v in data.items():
+            if k != 'count':
+                branch = data[k]['team']
+                team_id = branch[0][1]['team_id']
+                standings[team_id] = {}
+                branch = branch[-1]
+                standings[team_id]['rank'] = branch['team_standings']['rank']
+                standings[team_id].update(branch['team_standings']['outcome_totals'])
+                standings[team_id]['points_for'] = branch['team_standings']['points_for']
+                standings[team_id]['points_against'] = branch['team_standings']['points_against']
+        return standings
+
+    def get_team_roster(self, team_id='1'):
+        data = self.session_request(team_roster(team_id))['fantasy_content']['team'][1]['roster']['0']
+        print(data)
+
+a = YahooFantasyAPI()
+a.get_player_stats()

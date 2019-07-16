@@ -7,7 +7,7 @@
 {% block content %}
   {% if g.user %}
   <div class="dropdown">
-        <button class="btn btn-neutral" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="/static/images/create.png"/>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -40,28 +40,28 @@
             <button class="btn btn-just-icon btn-link">
               {% if post['id'] not in g.user_likes %}
                 <a data-toggle="tooltip" data-placement="top" title ="{{ post['likes'] }}" href="{{ url_for('blog.like', id=post['id'], action=1) }}">
-                  <img src="/static/images/like.png" width="20", height="20"/>
+                  <img src="/static/images/smiley.png" width="20", height="20"/>
                 </a>
               {% else %}
                 <a data-toggle="tooltip" data-placement="top" title ="{{ post['likes'] }}" href="{{ url_for('blog.like', id=post['id'], action=0) }}">
-                  <img src="/static/images/liked.png" width="20", height="20"/>
+                  <img src="/static/images/smileyed.png" width="20", height="20"/>
                 </a>
               {% endif %}
             </button>
             <button class="btn btn-just-icon btn-link">
               {% if post['id'] not in g.user_dislikes %}
                 <a data-toggle="tooltip" data-placement="top" title ="{{ post['dislikes'] }}"  href="{{ url_for('blog.dislike', id=post['id'], action=1) }}">
-                  <img src="/static/images/dislike.png" width="20", height="20"/>
+                  <img src="/static/images/frowny.png" width="20", height="20"/>
                 </a>
               {% else %}
                 <a data-toggle="tooltip" data-placement="top" title ="{{ post['dislikes'] }}"  href="{{ url_for('blog.dislike', id=post['id'], action=0) }}">
-                  <img src="/static/images/disliked.png" width="20", height="20"/>
+                  <img src="/static/images/frowneyed.png" width="20", height="20"/>
                 </a>
               {% endif %}
             </button>
             <button class="btn btn-just-icon btn-link">
               <a href="#{{ post['title'].replace(' ','') }}" data-toggle="collapse" aria-expanded="false" aria-controls="{{ post['title'].replace(' ','') }}">
-                <img src="/static/images/reply.png" width="20", height="20"/>
+                <img src="/static/images/comment.png" width="20", height="20"/>
               </a>
             </button>
           </div>

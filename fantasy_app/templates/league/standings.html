@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th scope="col">Rank</th>
+                <th scope="col">Record</th>
+                <th scope="col">Win Percentage</th>
+                <th scope="col">Points For</th>
+                <th scope="col">Points Against</th>
+            </tr>
+        </thead>
+        {% for team in standings %}
+        <tr>
+            <td><img src="{{ team['image'] }}" id="round" /></td>
+            <td scope="row">{{team['rank']}}</td>
+            <td>{{team['wins']}}-{{team['losses']}}-{{team['ties']}}</td>
+            <td>{{team['percentage']}}</td>
+            <td>{{team['points_for']}}</td>
+            <td>{{team['points_against']}}</td>
+        </tr>
+        {% endfor %}
+    </table>    
+</div>
+
+{% endblock %}

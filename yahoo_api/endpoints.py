@@ -34,3 +34,6 @@ def team_roster_players(team_id):
 
 def players_by_key(player_ids):
     return 'https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys='+','.join(format_ids_to_keys(player_ids))
+
+def players_stats_by_key(player_ids):
+    return players_by_key(player_ids) +'/stats'

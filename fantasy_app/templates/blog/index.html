@@ -65,18 +65,6 @@
             </button>
           </div>
       </div>
-      <!--<div id="{{ post['title'] }}" style="display: none; width: 20rem;">
-        {% for comment in comments %}
-          {% if comment['postid'] == post['id'] %}
-            {% for commenttime in commenttimes %}
-              {% if commenttime['id'] == comment['id'] %}
-                <h6 class="card-subtitle mb-2 text-muted">{{ comment['name'] }} - {{ commenttime['time'] }}</h6>
-              {% endif %}
-            {% endfor %}
-            <p class="card-text">{{ comment['comment'] }}</p>
-          {% endif %}
-        {% endfor %}
-      </div>-->
     </article>
   {% endfor %}
 {% endblock %}

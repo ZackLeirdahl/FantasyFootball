@@ -25,11 +25,11 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    from .blueprints import auth, blog, profile, matchups
+    from .blueprints import auth, blog, profile, league
     app.register_blueprint(auth.bp)
     app.register_blueprint(profile.bp)
     app.register_blueprint(blog.bp)
-    app.register_blueprint(matchups.bp)
+    app.register_blueprint(league.bp)
     app.add_url_rule('/', endpoint='index')
 
     return app
