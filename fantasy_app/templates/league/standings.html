@@ -2,8 +2,8 @@
 {% block content %}
 
 <div>
-    <table class="table">
-        <thead>
+    <table class="table table-hover table-borderless">
+        <thead class="thead-primary">
             <tr>
                 <th></th>
                 <th scope="col">Rank</th>
@@ -15,8 +15,12 @@
         </thead>
         {% for team in standings %}
         <tr>
-            <td><img src="{{ team['image'] }}" id="round" /></td>
-            <td scope="row">{{team['rank']}}</td>
+            <td>
+                <a class="standings-link" href="{{ url_for('league.teams', id=team['team_id']) }}">
+                    <img src="{{ team['image'] }}" id="round" /> {{team['name']}}
+                </a>
+            </td>
+            <td scope="row"><strong>{{team['rank']}}</strong></td>
             <td>{{team['wins']}}-{{team['losses']}}-{{team['ties']}}</td>
             <td>{{team['percentage']}}</td>
             <td>{{team['points_for']}}</td>

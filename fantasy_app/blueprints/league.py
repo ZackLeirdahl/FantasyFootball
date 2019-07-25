@@ -1,35 +1,28 @@
 import functools
-
-from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
-)
+from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for)
 from .auth import login_required
-from ..db import get_db, get_fdb
-from ..util import get_matchups, get_standings
-bp = Blueprint('league', __name__, url_prefix='/league')
 
+bp = Blueprint('league', __name__, url_prefix='/league')
 
 @bp.route('/matchups', methods=('GET', 'POST'))
 @login_required
 def matchups():
-    matchups = get_matchups()
-    return render_template('league/matchups.html', matchups=matchups)
+    return render_template('league/matchups.html', matchups=g.fl.get_matchups())
 
 @bp.route('/standings', methods=('GET', 'POST'))
 @login_required
 def standings():
-    standings = get_standings()
-    return render_template('league/standings.html', standings=standings)
+    return render_template('league/standings.html', standings=g.fl.get_standings())
 
-@bp.route('/teams', methods=('GET', 'POST'))
+@bp.route('/<int:id>/teams', methods=('GET', 'POST'))
 @login_required
-def teams():
-    return render_template('league/standings.html')
+def teams(id):
+    return render_template('league/teams.html', roster_positions = g.fl.get_roster_positions(), team=g.fl.get_document('team', str(id)))
 
-@bp.route('/free_agents', methods=('GET', 'POST'))
+@bp.route('/players', methods=('GET', 'POST'))
 @login_required
 def free_agents():
-    return render_template('league/free_agents.html')
+    return render_template('league/players.html')
 
 @bp.route('/weekly_awards', methods=('GET', 'POST'))
 @login_required

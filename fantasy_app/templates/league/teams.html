@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="card no-transition">
+    <div class="card-header">
+        <img src="{{team['image']}}" id="round"/>
+        {{team['nickname']}} - {{ team['name'] }}
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <ul>
+        {% for k, v in roster_positions.items() %}
+            <li>{{ k }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

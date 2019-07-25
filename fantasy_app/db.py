@@ -31,7 +31,8 @@ def init_app(app):
 
 def get_fdb():
     if (not len(firebase_admin._apps)):
-        firebase_admin.initialize_app(credentials.Certificate(os.path.dirname(__file__) + r'\static\auth\firebase_auth.json'),options= {'databaseURL': 'https://fantasyfootball-ee95c.firebaseio.com'})
+        firebase_admin.initialize_app(credentials.Certificate(os.path.dirname(__file__) + r'\static\auth\firebase_auth.json'),
+                options= {'databaseURL': 'https://fantasyfootball-ee95c.firebaseio.com'})
     if 'fb' not in g:
         g.fb = firestore.client()
     return g.fb

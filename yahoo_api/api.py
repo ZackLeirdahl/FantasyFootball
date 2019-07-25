@@ -1,7 +1,8 @@
 import json, os
 from yahoo_oauth import OAuth2
 from endpoints import *
-
+from urllib import request
+from bs4 import BeautifulSoup
 class YahooFantasyAPI:
     def __init__(self):
         self.session = self.get_session()
@@ -67,15 +68,15 @@ class YahooFantasyAPI:
                 else:
                     details[team_id][k] = v
         matchup_key += '-' + details['week_start'][:4]
-        return [matchup_key, details]
-
-    def get_player_description(self, player_id = '25712'):
-        data = self.session_request(players_by_key([player_id]))
-        print(data)
-    
+        return [matchup_key, details]       
+        
     def get_player_stats(self, player_id = '29396'):
-        data = self.session_request(players_stats_by_key([player_id]))
-        print(data)
+        stats = {}
+        for stat in self.session_request(players_stats_by_key([player_id]))['fantasy_content']['players']['0']['player'][1]['player_stats']['stats']:
+            stat = stat['stat']
+            stat_id = stat['stat_id']
+            stats[stat_id] = {'value':stat['value']}
+        return stats
 
     def get_standings(self):
         data = self.session_request(league_standings())['fantasy_content']['league'][1]['standings'][0]['teams']
@@ -96,5 +97,78 @@ class YahooFantasyAPI:
         data = self.session_request(team_roster(team_id))['fantasy_content']['team'][1]['roster']['0']
         print(data)
 
-a = YahooFantasyAPI()
-a.get_player_stats()
+    def get_player_ids(self):
+        teams = ['buffalo','miami','new-england','ny-jets','dallas','ny-giants','philadelphia','washington','denver','kansas-city','la-chargers','oakland','arizona','la-rams','san-francisco','seattle','houston','cincinnati','cleveland','pittsburgh','chicago','detroit','minnesota','green-bay','houston','indianapolis','jacksonville','tennessee','atlanta','carolina','new-orleans','tampa-bay']
+        links = {}
+        for team in teams:
+            raw = request.urlopen('https://sports.yahoo.com/nfl/teams/' + team + '/roster/').read().decode('utf-8')
+            soup = BeautifulSoup(raw)
+            links[team] = []
+            for link in soup.findAll('a'):
+                links[team].append(link.get('href'))
+        players = {}
+        for k,v in links.items():
+            players[k] = []
+            for link in v:
+                try:
+                    pid = link.split('/')[-2]
+                    players[k].append(int(pid))
+                except:
+                    continue
+        return players
+    
+    def get_player_description(self, player_ids = None):
+        players = {}
+        player_attrs = ['player_id', 'name', 'editorial_team_key','editorial_team_full_name','editorial_team_abbr', 'display_position']
+        if type(player_ids) == str:
+            data = self.session_request(players_by_key([player_ids]))
+        else:
+            data = self.session_request(players_by_key(player_ids))
+        data = data['fantasy_content']['players']
+        for k, v in data.items():
+            if type(v) == dict:
+                branch = v['player'][0]
+                player_id = branch[1]['player_id']
+                players[player_id] = {}
+                for i in range(len(branch)):
+                    attr = branch[i]
+                    if type(attr) == dict:
+                        for kk, vv in attr.items():
+                            if kk in player_attrs:
+                                if kk != 'name':
+                                    players[player_id][kk] = vv
+                                else:
+                                    players[player_id]['first_name'] = vv['first']
+                                    players[player_id]['last_name'] = vv['last']
+        return players
+
+    def get_stat_categories(self):
+        stats = {}
+        for stat in self.session_request(league_settings())['fantasy_content']['league'][1]['settings'][0]['stat_categories']['stats']:
+            stat = stat['stat']
+            stat_id = stat['stat_id']
+            stats[stat_id] = {'name': stat['name'], 'display_name': stat['display_name'], 'position_type': stat['position_type']}
+            if 'is_only_display_stat' in list(stat.keys()):
+                stats[stat_id]['display_only'] = 'Y'
+            else:
+                stats[stat_id]['display_only'] = 'F'
+        return stats
+
+    def get_stat_modifiers(self):
+        stats = {}
+        for stat in self.session_request(league_settings())['fantasy_content']['league'][1]['settings'][0]['stat_modifiers']['stats']:
+            stat = stat['stat']
+            stat_id = stat['stat_id']
+            stats[stat_id] = {'value': float(stat['value'])}
+        return stats
+    
+    def get_team_positions(self):
+        positions = {}
+        data = self.session_request(league_settings())['fantasy_content']['league'][1]['settings'][0]['roster_positions']
+        for position in data:
+            position = position['roster_position']
+            try:
+                positions[position['position'].replace('W/R/T','FLEX')] = {'position_type':position['position_type'], 'count': position['count']}
+            except:
+                positions[position['position'].replace('W/R/T','FLEX')] = {'position_type': 'M', 'count': position['count'] }
+        return positions

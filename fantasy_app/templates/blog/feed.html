@@ -5,98 +5,255 @@
 {% endblock %}
 
 {% block content %}
+  <!-- Buttons -->
   {% if g.user %}
-  <div class="dropdown">
-        <button class="btn btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="/static/images/create.png"/>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{{ url_for('blog.create') }}">Post</a>
-            <a class="dropdown-item" href="{{ url_for('blog.upload') }}">Media</a>
-            <a class="dropdown-item" href="#">Poll</a>
-            <a class="dropdown-item" href="#">Wager</a>
-        </div>
-      </div>
+  <button type="button" class="btn btn-create" style="margin-left:10px" data-toggle="modal" data-target="#createModal" title="Write a post.">
+    <img src="/static/images/create.png"/>
+  </button>
+  <button type="button" class="btn btn-create" data-toggle="modal" data-target="#uploadModal" title="Upload an image.">
+    <img src="/static/images/image_upload.png"/>
+  </button>
+  <button type="button" class="btn btn-create" data-toggle="modal" data-target="#uploadModal" title="Create a bet.">
+    <img src="/static/images/wager.png"/>
+  </button>
+  <button type="button" class="btn btn-create" data-toggle="modal" data-target="#uploadModal" title="Send a poll.">
+    <img src="/static/images/poll.png"/>
+  </button>
   {% endif %}
-  {% for post in posts %}
-    <article class="post">
-      <div class="card" style="width: 30rem; margin-left: 10px;">
-        <div class="card-body">
-            <h4 class="card-title">
-              {% if g.user['id'] == post['author_id'] %}
-                <a class= "post_header" href="{{ url_for('blog.update', id=post['id']) }}">{{ post['title'] }}</a>
-              {% else %}
-                <a class= "post_header" href="#">{{ post['title'] }}</a>
-              {% endif %}
-            </h4>
-            <h6 class="card-subtitle mb-2 text-muted">
-              {% for posttime in posttimes %}
-                {% if posttime['id'] == post['id'] %}
-                  {{ post['name'] }} - {{ posttime['time'] }}
-                {% endif %}
-              {% endfor %}
-            </h6>
-            <p class="card-text">{{ post['body'] }}</p>
-            <button class="btn btn-just-icon btn-link">
-              {% if post['id'] not in g.user_likes %}
-                <a data-toggle="tooltip" data-placement="top" title ="{{ post['likes'] }}" href="{{ url_for('blog.like', id=post['id'], action=1) }}">
-                  <img src="/static/images/smiley.png" width="20", height="20"/>
-                </a>
-              {% else %}
-                <a data-toggle="tooltip" data-placement="top" title ="{{ post['likes'] }}" href="{{ url_for('blog.like', id=post['id'], action=0) }}">
-                  <img src="/static/images/smileyed.png" width="20", height="20"/>
-                </a>
-              {% endif %}
-            </button>
-            <button class="btn btn-just-icon btn-link">
-              {% if post['id'] not in g.user_dislikes %}
-                <a data-toggle="tooltip" data-placement="top" title ="{{ post['dislikes'] }}"  href="{{ url_for('blog.dislike', id=post['id'], action=1) }}">
-                  <img src="/static/images/frowny.png" width="20", height="20"/>
-                </a>
-              {% else %}
-                <a data-toggle="tooltip" data-placement="top" title ="{{ post['dislikes'] }}"  href="{{ url_for('blog.dislike', id=post['id'], action=0) }}">
-                  <img src="/static/images/frowneyed.png" width="20", height="20"/>
-                </a>
-              {% endif %}
-            </button>
-            <button class="btn btn-just-icon btn-link">
-              <a href="#{{ post['title'].replace(' ','') }}" data-toggle="collapse" aria-expanded="false" aria-controls="{{ post['title'].replace(' ','') }}">
-                <img src="/static/images/comment.png" width="20", height="20"/>
-              </a>
-            </button>
+  <!-- Create Post Modal -->
+  <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createModalLabel">New Post</h5>
+        </div>
+        <div class="modal-body">
+          <form id="create" method="post" novalidate>
+            <div class="form-group-first">
+              <label for="titleInput">Title</label>
+              <input name="title" type="text" class ="form-control" id="titleInput" />
+            </div>
+            <div class="form-group">
+              <label for="postBody">Body</label>
+              <textarea name="body" class="form-control" id="postBody" rows="3"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <div class="left-side">
+            <button type="submit" formaction="{{ url_for('blog.create') }}" form="create" class="btn btn-success btn-link">Save</button>
+          </div>
+          <div class="divider"></div>
+          <div class="right-side">
+            <button type="button" data-dismiss="modal" class="btn btn-danger btn-link">Nevermind</button>
           </div>
         </div>
-        <div class="collapse" id="{{ post['title'].replace(' ','') }}">
-          <div class="card" style="width: 30rem; margin-left: 10px;">
-            <div class="card-block">
-              <div class="row">
-                <div class="col-lg-6">
-                  <form method="post" novalidate>
-                    <div class="form-group-first">
-                      <textarea name="comment" class="form-control" id="comment-box" rows="3"></textarea>
-                    </div>
-                    <input type="hidden" name="id" value="{{post['id']}}">
-                    <button style="margin-left: 15px; margin-bottom: 10px;" type="submit" class="btn btn-primary">Save</button>
-                  </form>
+      </div>
+    </div>
+  </div>
+  <!-- Upload File Modal -->
+  <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadModalLabel">New File</h5>
+          </div>
+          <div class="modal-body">
+            <form method="post" id="upload" enctype = "multipart/form-data">
+              <div class="input-group">
+                <div class="custom-file">
+                  <input type="file" name="file" class="custom-file-input" id="customFile">
+                  <label class="custom-file-label" id="customFileLabel" for="customFile">Choose file</label>
                 </div>
-                <div class="col-lg-4 offset-lg-1">
-                {% for comment in comments %}
-                 {% if comment['postid'] == post['id'] %}
-                  <div class="row">
-                  {% for commenttime in commenttimes %}
-                   {% if commenttime['id'] == comment['id'] %}
-                    <h6 class="card-subtitle mb-2 text-muted">{{ comment['name'] }} - {{ commenttime['time'] }}</h6><br>
-                   {% endif %}
-                  {% endfor %}     
-                    <p class="card-text">{{ comment['comment'] }}</p>
-                  </div>
-                {% endif %}
-              {% endfor %}
+              </div>
+              <br>
+              <div class="input-group">
+                <textarea name="description" class="form-control" id="postBody" placeholder="Description" rows="3"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="left-side">
+              <button type="submit" formaction="{{ url_for('blog.upload') }}" form="upload" class="btn btn-success btn-link">Save</button>
+            </div>
+            <div class="divider"></div>
+            <div class="right-side">
+              <button type="button" data-dismiss="modal" class="btn btn-danger btn-link">Nevermind</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% for post in posts %}
+  <article class="post">
+    {% if post['type'] == 'text' %}
+    <!-- Text Post Card -->
+    <div class="card" style="width: 40rem; margin-left: 10px;">
+      <div class="card-body" style="float:left">
+        <h4 class="card-title">
+        {% if g.user['id'] == post['author_id'] %}
+          <a class= "post_header" data-toggle="modal" data-target="#{{post['uid']}}updateText" href="#" >{{ post['title'] }}</a>
+        {% else %}
+          <a class= "post_header" href="#">{{ post['title'] }}</a>
+        {% endif %}
+        </h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ post['name'] }} - {{ post['created'] }}</h6>
+        <p class="card-text" >{{ post['body'] }}</p>
+          {% if post['id'] not in user_likes %}
+          <div class="btn btn-just-icon btn-link">
+            <img src="/static/images/like.png" id="{{post['uid']}}" onclick="changeImage(this.id, {{post['id']}})" width="20" height="20"  />
+            <p id="{{post['uid']}}p">{{post['likes']}}</p>
+          </div>
+          {% else %}
+          <div class="btn btn-just-icon btn-link">
+            <img src="/static/images/unlike.png" id="{{post['uid']}}" onclick="changeImage(this.id, {{post['id']}})" width="20", height="20"/>
+            <p id="{{post['uid']}}p">{{post['likes']}}</p>
+          </div>
+          {% endif %}
+          <a class="btn btn-just-icon btn-link"  href="#{{ post['uid'] }}c" data-toggle="collapse" aria-expanded="false" aria-controls="{{ post['uid'] }}c">
+            <img src="/static/images/comment.png" width="20", height="20"/>
+            <p>{{post['comments']}}</p>
+          </a>
+        </div>
+      </div>
+      {% else %}
+      <!-- Image Post Card -->
+      <div class="card" style="width: 40rem; margin-left: 10px;">
+        <div class="card-body">
+          <h4 class="card-title">
+            {% if g.user['id'] == post['author_id'] %}
+            <a class="post_header" data-toggle="modal" data-target="#updateFileModal" href="#" >
+              <img class="card-img-top" src="\static\upload\{{post['filename']}}">
+            </a>
+            {% else %}
+            <a class= "post_header" href="#">
+              <img class="card-img-top" src="\static\upload\{{post['filename']}}">
+            </a>
+            {% endif %}
+          </h4>
+          <br>
+          <h6 class="card-subtitle mb-2 text-muted">{{ post['name'] }} - {{ post['created'] }}</h6>
+          <p class="card-text">{{post['description']}}</p>
+          {% if post['id'] not in user_likes %}
+          <div class="btn btn-just-icon btn-link">
+            <img src="/static/images/like.png" id="{{post['uid']}}" onclick="changeImage(this.id, {{post['id']}})" width="20" height="20"  />
+            <p id="{{post['uid']}}p">{{post['likes']}}</p>
+          </div>
+          {% else %}
+          <div class="btn btn-just-icon btn-link">
+            <img src="/static/images/unlike.png" id="{{post['uid']}}" onclick="changeImage(this.id, {{post['id']}})" width="20", height="20"/>
+            <p id="{{post['uid']}}p">{{post['likes']}}</p>
+          </div>
+          {% endif %}
+          <a class="btn btn-just-icon btn-link"  href="#{{ post['uid'] }}c" data-toggle="collapse" aria-expanded="false" aria-controls="{{ post['uid'] }}c">
+            <img src="/static/images/comment.png" width="20", height="20"/>
+            <p>{{post['comments']}}</p>
+          </a>
+        </div>
+      </div>
+      {% endif %}
+      <!-- Update Text Post Modal -->
+      <div class="modal fade" id="{{post['uid']}}updateText" tabindex="-1" role="dialog" aria-labelledby="updateTextLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateTextLabel">Edit Post</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="update" method="post" novalidate>
+                <div class="form-group-first">
+                  <label for="titleInput">Title</label>
+                  <input name="title" type="text" class ="form-control" id="titleInput" value="{{ post['title'] }}" />
+                </div>
+                <div class="form-group">
+                  <label for="postBody">Body</label>
+                  <textarea name="body" class="form-control" id="postBody" rows="3">{{ post['body'] }}</textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <div class="left-side">
+                <button type="submit" formaction="{{ url_for('blog.update', id=post['id']) }}" form="update" class="btn btn-default btn-link">Save</button>
+              </div>
+              <div class="divider"></div>
+              <div class="right-side">
+                <button type="submit" formaction="{{ url_for('blog.delete', id=post['id']) }}" form="update" onclick="return confirm('Are you sure?');" class="btn btn-danger btn-link">Delete</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </article>
-  {% endfor %}
+      <!-- Update File Post Modal -->
+      <div class="modal fade" id="updateFileModal" tabindex="-1" role="dialog" aria-labelledby="updateFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateFileModalLabel">Edit File</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" id="updateFile" enctype = "multipart/form-data">
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile">{{post['filename']}}</label>
+                    <input type="hidden" name="filename" value="{{post['filename']}}">
+                  </div>
+                </div>
+                <br>
+                <div class="input-group">
+                  <textarea name="description" class="form-control" id="postBody" placeholder="Description" rows="3"> {{post['description']}}</textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <div class="left-side">
+                <button type="submit" formaction="{{ url_for('blog.uploadUpdate', id=post['id']) }}" form="updateFile" class="btn btn-success btn-link">Save</button>
+              </div>
+              <div class="divider"></div>
+              <div class="right-side">
+                <button type="submit" formaction="{{ url_for('blog.delete', id=post['id']) }}" form="updateFile" onclick="return confirm('Are you sure?');" class="btn btn-danger btn-link">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Comment Card -->
+      <div class="collapse" id="{{ post['uid'] }}c">
+        <div class="card" style="width: 40rem; margin-left: 10px;">
+          <div class="card-block">
+            <div class="row">
+              <div class="col-lg-6">
+                <form method="post" id="{{post['uid']}}commentForm" novalidate>
+                  <div class="form-group-first">
+                    <div class="input-group">
+                      <textarea type="text" name="commentText" class="form-control" id="commentBox" rows="4"></textarea>
+                    </div>
+                  </div>
+                  <input type="hidden" name="id" value="{{post['id']}}">
+                  <div class="modal-footer no-border-footer">
+                    <button type="submit" formaction="{{ url_for('blog.comment', id=post['id']) }}" form="{{post['uid']}}commentForm" class="btn btn-block btn-primary" style="margin-left: 15px; margin-bottom: 10px;">Save</button>
+                  </div>
+                </form>
+              </div>
+              <div class="col-lg-4">
+              {% for comment in comments %}
+                {% if comment['postid'] == post['id'] %}
+                <h6 class="card-subtitle mb-2 text-muted">{{ comment['name'] }} - {{ comment['created'] }}</h6>
+                <p class="card-text">{{ comment['comment'] }}</p>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+  <script type="text/javascript" src="\static\assets\js\custom.js"></script>
+{% endfor %}
 {% endblock %}

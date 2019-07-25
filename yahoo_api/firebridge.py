@@ -56,11 +56,32 @@ class Firebridge(YahooFantasyAPI):
                     self.update_document('matchups', data[0], data[1])
 
     def add_standings(self):
-        standings = self.get_standings()
-        for k, v in standings.items():
+        for k, v in self.get_standings().items():
             self.add_document('standings',k,v)
 
     def update_standings(self):
-        standings = self.get_standings()
-        for k, v in standings.items():
+        for k, v in self.get_standings().items():
             self.update_document('standings',k,v)
+
+    def add_players(self):
+        for k, v in self.get_player_ids().items():
+            for kk, vv in self.get_player_description(v).items():
+                self.add_document('players',kk,vv)
+    
+    def add_stat_categories(self):
+        for k, v in get_stat_categories().items():
+            self.add_document('stat_categories', str(k), v)
+    
+    def update_stat_categories(self):
+        for k, v in self.get_stat_categories().items():
+            self.update_document('stat_categories', str(k), v)
+        for k, v in self.get_stat_modifiers().items():
+            self.update_document('stat_categories', str(k), v)
+    
+    def add_roster_positions(self):
+        for k, v in self.get_team_positions().items():
+            self.add_document('roster_positions', k, v)
+
+    def update_roster_positions(self):
+        for k, v in self.get_team_positions().items():
+            self.update_document('roster_positions', k, v)

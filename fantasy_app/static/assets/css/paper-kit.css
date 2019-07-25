@@ -986,6 +986,7 @@
   transition: all 150ms linear;
 }
 
+
 .btn.btn-border,
 .btn.btn-link {
   background-color: transparent;
@@ -1003,9 +1004,10 @@
 .btn:not(:disabled):not(.disabled).active,
 .btn:not(:disabled):not(.disabled).active:focus,
 .show>.btn.dropdown-toggle {
-  background-color: #403D39;
+  /*background-color: #403D39;*/
+  background-color: #ffffff;
   color: #FFFFFF;
-  border-color: #403D39;
+  border-color: #ffffff;
   box-shadow: none;
 }
 
@@ -1053,6 +1055,7 @@ fieldset[disabled] .btn.active {
 .open>.btn.btn-link.dropdown-toggle {
   background-color: transparent !important;
   color: #403D39 !important;
+  opacity: 50%;
 }
 
 .btn.btn-link .caret {
@@ -1068,6 +1071,7 @@ fieldset[disabled] .btn.active {
   outline: 0 !important;
   -webkit-box-shadow: none;
   box-shadow: none;
+  opacity: 50%;
 }
 
 .btn:active,
@@ -1119,8 +1123,9 @@ fieldset[disabled] .btn.active {
   background-color: #55acee;
   border-color: #55acee;
   color: #FFFFFF;
-  opacity: 1;
+  opacity: .8;
   filter: alpha(opacity=100);
+  border-radius: 30px;
 }
 
 .btn-primary:hover,
@@ -1135,9 +1140,10 @@ fieldset[disabled] .btn.active {
 .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show>.btn-primary.dropdown-toggle {
-  background-color: #34b5b8;
+  background-color: #55acee;
+  border-color: #55acee;
   color: #FFFFFF;
-  border-color: #34b5b8;
+  opacity: 1;
   box-shadow: none;
 }
 
@@ -2247,6 +2253,9 @@ fieldset[disabled] .btn-neutral.active {
 
 .btn-round {
   border-radius: 30px;
+  background-color: #55acee; 
+  border-color: #55acee;
+  color: #FFFFFF;
 }
 
 .btn.btn-link:focus {
@@ -3307,7 +3316,7 @@ body {
 }
 
 a {
-  color: #51bcda;
+  color: #333333;
 }
 
 a:hover,
@@ -3435,6 +3444,8 @@ input[type="file"]>input[type="button"]::-moz-focus-inner {
 */
 .bg-primary {
   background-color: #55acee !important;
+  opacity: .9;
+  /*background-image: linear-gradient(to right,#55acee, #ffffff) !important;*/
 }
 
 .bg-purple {
@@ -4298,7 +4309,7 @@ License - nucleoapp.com/license/
 .nav-tabs .nav-item .nav-link {
   border: 0 none;
   color: #A49E93;
-  background-color: transparent;
+  background-color: #ffffff;
 }
 
 .nav-tabs .nav-item .nav-link:hover {
@@ -4306,11 +4317,14 @@ License - nucleoapp.com/license/
 }
 
 .nav-tabs .nav-item .nav-link.active {
-  color: #66615b;
+  /*color: #66615b;*/
+  color: #ffffff;
 }
 
 .nav-tabs .nav-item {
-  color: #66615b;
+  /*color: #66615b;*/
+  color: #ffffff;
+  font-weight: 500;
   position: relative;
 }
 
@@ -4484,6 +4498,7 @@ License - nucleoapp.com/license/
 .nav .nav-item .nav-link:hover,
 .nav .nav-item .nav-link:focus {
   background-color: transparent;
+
 }
 
 .navbar {
@@ -4760,9 +4775,8 @@ License - nucleoapp.com/license/
 }
 
 .navbar-absolute {
-  position: absolute;
+  position: relative;
   width: 100%;
-  padding-top: 10px;
   z-index: 1029;
 }
 
@@ -4783,7 +4797,7 @@ License - nucleoapp.com/license/
   -webkit-box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(17, 16, 15, 0.1);
   box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(17, 16, 15, 0.1);
   visibility: hidden;
-  position: absolute;
+  position: relative;
 }
 
 .dropdown .dropdown-menu[x-placement="top-start"] {
@@ -4806,6 +4820,7 @@ License - nucleoapp.com/license/
   opacity: 1;
   filter: alpha(opacity=100);
   visibility: visible;
+  
 }
 
 .dropdown.show .dropdown-menu[x-placement="top-start"] {
@@ -4855,7 +4870,7 @@ License - nucleoapp.com/license/
 }
 
 .dropdown-menu .dropdown-item {
-  color: #66615b;
+  color: #66615b !important;
   font-size: 14px;
   padding: 10px 45px 10px 15px;
   clear: both;
@@ -4914,7 +4929,8 @@ License - nucleoapp.com/license/
 
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item:focus {
-  color: #FFFFFF !important;
+  /*color: #FFFFFF !important;*/
+  color: gray !important;
   opacity: 1;
   text-decoration: none;
 }
@@ -7729,6 +7745,7 @@ License - nucleoapp.com/license/
     line-height: 1.5em;
     padding: 15px 0;
   }
+
   .navbar-collapse .navbar-nav>.nav-item>.nav-link:hover,
   .navbar-collapse .navbar-nav>.nav-item>.nav-link:active {
     color: #403D39 !important;
@@ -8213,7 +8230,7 @@ License - nucleoapp.com/license/
 
 /*# sourceMappingURL=kit-free.css.map */
 
-#comment-box { 
+#commentBox { 
   resize: none;
   overflow: auto;
    
@@ -8228,4 +8245,62 @@ License - nucleoapp.com/license/
   min-width: 55px;
   padding: 8px;
   background-size:cover;
+}
+
+.thead-primary
+{
+  background-color: #55acee !important;
+  color: #ffffff;
+  opacity: 0.75;
+}
+
+.profile-picture-round
+{
+  border-radius: 35px;
+  border-color: transparent;
+  height: 30px;
+  width: 30px;
+  min-width: 30px;
+  padding: 10px;
+  background-size:cover;
+  background-color:transparent;
+}
+.nav-picture-round
+{
+  border-radius: 35px;
+  border-color: transparent;
+  height: 30px;
+  width: 30px;
+  min-width: 30px;
+  padding: 10px;
+  background-size:cover;
+  background-color:#ffffff;
+}
+.btn-create {
+  background-color: transparent;
+  border-color: transparent;
+  color: #FFFFFF;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  margin-top: 3px;
+  margin-left: 3px;
+}
+.btn-create:hover {
+  /*background-color: #55acee;*/
+  border-color: #55acee;
+}
+
+.standings-link {
+  color: black !important;
+
+}
+.active-item {
+  margin: 15px 0px;
+  color: #ffffff !important;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.5em;
+  padding: 0px 8px;
+  display: inline-block;
 }

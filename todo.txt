@@ -15,15 +15,18 @@
 - change index to feed
 - feed methods:
     - New (each has their own form, and their own card)
-        - post
+        - Post
         - Video
         - Image
         - wager
         - Poll
-- matchups page
-    - main view has user's matchup
-    - update content dropdown with player stats and projections
+    - give each method a button and a modal
 
 - create method to get which week of the season it is
-- standings page:
-    - create the view template to display the data
+- login is a modal
+- add background threads to speed up data processing
+
+- make the opacity of the percent chance to win progress bar equivalent to the percent chance to win
+- fix the drop downs when feed is the route
+- home page is a dashboard
+

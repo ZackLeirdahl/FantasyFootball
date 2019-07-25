@@ -1,36 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
-<nav class="navbar navbar-expand-lg bg-primary">
-    <div class="container">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Features</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown link
+<div class="page-header" style="background-image: url('/static/images/homepage.jpg');">
+  <div class="filter"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 ml-auto mr-auto">
+        <div class="card card-register">
+          <h3 class="title mx-auto">Welcome</h3>
+          <div class="social-line text-center">
+            <a href="#pablo" class="btn btn-neutral btn-facebook btn-just-icon">
+              <i class="fa fa-facebook-square"></i>
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li>
-        </ul>
+            <a href="#pablo" class="btn btn-neutral btn-google btn-just-icon">
+              <i class="fa fa-google-plus"></i>
+            </a>
+            <a href="#pablo" class="btn btn-neutral btn-twitter btn-just-icon">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </div>
+          <form class="register-form">
+            <label>Email</label>
+            <input type="text" class="form-control" placeholder="Email">
+            <label>Password</label>
+            <input type="password" class="form-control" placeholder="Password">
+            <button class="btn btn-danger btn-block btn-round">Register</button>
+          </form>
+          <div class="forgot">
+            <a href="#" class="btn btn-link btn-danger">Forgot password?</a>
+          </div>
+        </div>
       </div>
     </div>
-  </nav>
+  </div>
+  <div class="footer register-footer text-center">
+    <h6>©
+      <script>
+        document.write(new Date().getFullYear())
+      </script>, made with <i class="fa fa-heart heart"></i> by Creative Tim</h6>
+  </div>
+</div>
+<!--   <div class="card bg-dark text-white">
+      <img class="card-img" src="\static\images\federico-beccari.jpg" alt="Card image">
+      <div class="card-img-overlay">
+        <h4 class="card-title text-white">Card title</h4>
+        <p class="card-text text-white">Last updated 3 mins ago</p>
+      </div>
+    </div> -->
+
 <!-- 
 <div class="page-header" data-parallax="true" style="background-image: url(/static/assets/img/daniel-olahh.jpg); transform: translate3d(0px, 0px, 0px);">
   <div class="filter"></div>
@@ -53,90 +69,14 @@
     This is a danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
   </div>
 -->
-  <span class="badge badge-primary">Primary</span>
-  <span class="badge badge-info">Info</span>
-  <span class="badge badge-success">Success</span>
-  <span class="badge badge-danger">Danger</span>
-  <span class="badge badge-warning">Warning</span>
-  <span class="badge badge-default">Default <br></span>
+
 
 <!--
 <button type="button" class="btn btn-lg btn-primary" disabled>Primary button</button>
 <button type="button" class="btn btn-secondary btn-lg" disabled>Button</button>
 -->
- <div class="card" style="width: 20rem;">
-    <a href ="#collapseExample" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
-    <div class="card-body">
-      <h4 class="card-title">Card title</h4>
-      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
-    </div>
-  </a>
-</div>
-<div class="collapse" id="collapseExample">
-    <div class="card card-body" style="width: 20rem;">
-        <form method="post" novalidate>
-            <div class="form-group-first">
-                <label  for="titleInput">Title</label>
-                <input name="title" type="text" class ="form-control" id="titleInput" value="BLAH">
-            </div>
-            <div class="form-group">
-                <label for="postBody">Body</label>
-                <textarea name="body" class="form-control" id="postBody" rows="3">asfasgafg</textarea>
-            </div>
-            <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Save</button>
-        </form>
-    </div>
-  </div>
-  <div id="accordion" role="tablist" aria-multiselectable="true">
-      <div class="card no-transition">
-          <div class="card-header card-collapse" role="tab" id="headingOne">
-              <h5 class="mb-0 panel-title">
-                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                      Default Collapsible Item 1
-                      <i class="nc-icon nc-minimal-down"></i>
-                  </a>
-              </h5>
-          </div>
-          <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne">
-              <div class="card-body">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-          </div>
-          <div class="card-header card-collapse" role="tab" id="headingTwo">
-              <h5 class="mb-0 panel-title">
-                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Default Collapsible Item 2
-                      <i class="nc-icon nc-minimal-down"></i>
-                  </a>
-              </h5>
-          </div>
-          <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-              <div class="card-body">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-          </div>
-          <div class="card-header card-collapse" role="tab" id="headingThree">
-              <h5 class="mb-0 panel-title">
-                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      Default Collapsible Item 3
-                      <i class="nc-icon nc-minimal-down"></i>
-                  </a>
-              </h5>
-          </div>
-          <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
-              <div class="card-body">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-          </div>
-      </div>
-  </div>
 
-
-
-      <!-- 2 columns card -->
+      <!-- 2 columns card
       <div class="card" style="width: 30rem; margin-left: 10px;">
           <div class="card-header">
               <h3>Tags</h3>
@@ -167,8 +107,8 @@
                   </div>
               </div>
           </div>
-          <!--/card-block-->
-      </div>
+
+      </div> -->
       <!-- /2 columns card -->
 
 <!-- <div class="card text-center">
