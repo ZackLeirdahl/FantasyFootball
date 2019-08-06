@@ -30,3 +30,11 @@ yahoo_api/__pycache__/firebase.cpython-37.pyc
 yahoo_api/__pycache__/utils.cpython-37.pyc
 yahoo_api/__pycache__/yaccess.cpython-37.pyc
 yahoo_api/__pycache__/yahoo_fantasy.cpython-37.pyc
+fantasy_app/static/temp/players.csv
+fantasy_app/static/temp/teams.csv
+fantasy_app/static/images/search.png
+fantasy_app/static/upload/antoine-barres.jpg
+fantasy_app/static/upload/avatar.jpg
+fantasy_app/__pycache__/firedata.cpython-37.pyc
+fantasy_app/static/assets/scss/paper-kit/_multiselect.scss
+fantasy_app/static/upload/antoine-barres.jpg

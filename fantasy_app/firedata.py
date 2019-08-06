@@ -1,5 +1,14 @@
-from .db import get_fdb
-import datetime, time, math
+import datetime, time, math, firebase_admin, os, pandas
+from flask import g, current_app
+from firebase_admin import credentials, firestore
+from firebase_admin import db as fb
+
+def get_fdb():
+    if (not len(firebase_admin._apps)):
+        firebase_admin.initialize_app(credentials.Certificate(os.path.dirname(__file__) + r'\static\auth\firebase_auth.json'), options= {'databaseURL': 'https://fantasyfootball-ee95c.firebaseio.com'})
+    if 'fb' not in g:
+        g.fb = firestore.client()
+    return g.fb
 
 def get_posttime_data(td):
     if td < 60:
@@ -11,9 +20,20 @@ def get_posttime_data(td):
     else:
         return str(math.trunc(td / 86400)) + 'd'
 
-
+def match_name(name, last_name, first_name):
+    names = name.split(' ')
+    if len(names) == 1:
+        if first_name[:len(name)] == name:
+            return True
+        elif last_name[:len(name)] == name:
+            return True
+    else:
+        if first_name == names[0] and last_name[:len(names[1])] == names[1]:
+            return True
+    return False
+    
 class Firedata:
-    def __init__(self):
+    def __init__(self, client = None):
         self.fb = get_fdb()
 
     def add_document_auto_key(self, collection, data):
@@ -33,17 +53,13 @@ class Firedata:
         return {doc.id: doc.to_dict() for doc in self.fb.collection(collection).get()}
 
     def get_document(self, collection, key):
-        for doc in self.fb.collection(collection).get():
-            if doc.id == key:
-                return doc.to_dict()
-        return None
+        return self.fb.collection(collection).document(key).get().to_dict() 
 
-class Firefeed(Firedata):
-    def __init__(self):
-        Firedata.__init__(self)
-    
     def generate_key(self, collection):
-        return str(len(self.get_documents(collection).keys()) + 1)
+        if len(list(self.get_documents(collection).keys())) != 0:
+            return str(int(max(list(self.get_documents(collection).keys()))) + 1)
+        else:
+            return '1'
     
     def like_post(self, id, userid):
         self.add_document('likes', str(userid) + '-' + str(id),{'liked': 1})
@@ -105,16 +121,8 @@ class Firefeed(Firedata):
             v['created'] = get_posttime_data(time.mktime(datetime.datetime.today().timetuple()) - v['time'])
             v.update({'id': k})
             comments.append(v)
-        print(sorted(comments,key=lambda k: k['time'], reverse=True))
         return sorted(comments,key=lambda k: k['time'], reverse=True)
-
-class Fireleague(Firedata):
-    def __init__(self):
-        Firedata.__init__(self)
-    
-    def get_teams(self):
-        return [v for k, v in self.get_documents('team').items()]
-    
+        
     def get_yahoo_user(self, username):
         data = self.get_documents('team')
         for k in list(data.keys()):
@@ -122,13 +130,27 @@ class Fireleague(Firedata):
                 return data[k]
         return None
 
-    def get_matchups(self):
+    def update_yahoo_user(self, username, password):
+        data = self.get_documents('team')
+        for k in list(data.keys()):
+            if data[k]['email'] == username:
+                self.update_document('teams',str(k), {'username': username, 'password': password})
+
+    def check_yahoo_user(self, username):
+        data = self.get_documents('team')
+        for k in list(data.keys()):
+            if data[k]['username'] == username:
+                return True
+        return False
+
+    def get_matchups(self, week=None):
         team_stats = []
         matchups = []
-        week = self.get_week()
+        if week == None:
+            week = self.get_week()
         teams = self.get_documents('team')
         for k, v in self.get_documents('matchups').items():
-            if k[len(week)] == week:
+            if k.split('-')[0] == week:
                 team_ids = k.split('-')[1:3]
                 matchups.append(team_ids)
                 temp_matchup = []
@@ -140,6 +162,12 @@ class Fireleague(Firedata):
         for ts in team_stats:
             ts[0]['percent_chance'] = str(ts[0]['win_probability'] * 100) +'%'
             ts[1]['percent_chance'] = str(ts[1]['win_probability'] * 100) +'%'
+            if ts[1]['win_probability'] <= 0.5:
+                ts[1].update({'opacity': 0.5, 'class': 'bg-danger'})
+                ts[0].update({'opacity': ts[0]['win_probability'], 'class': 'bg-success'})
+            else:
+                ts[0].update({'opacity': 0.5, 'class': 'bg-danger'})
+                ts[1].update({'opacity': ts[1]['win_probability'], 'class': 'bg-success'})
         return team_stats
 
     def get_standings(self):
@@ -152,10 +180,84 @@ class Fireleague(Firedata):
         return sorted(standings,key=lambda k: int(k['rank']))
     
     def get_week(self):
-        return '1'
+        today = datetime.date.today().toordinal()
+        week_one_end = datetime.date(2019,9,9).toordinal()
+        if today <= week_one_end:
+            return '1'
+        else:
+            return str(math.ceil((today - week_one_end)/7))
 
     def get_roster_positions(self):
-        data = self.get_documents('roster_positions')
-        print(data)
+        data = ['QB','WR','WR','RB','RB','TE','FLEX','K','DEF','BN','BN','BN','BN','BN','BN']
         return data
+    
+    def get_players(self):
+        if not os.path.isfile(os.path.dirname(__file__) + r'\static\temp\players.csv'):
+            players = self.get_documents('players')
+            df = pandas.DataFrame(players)
+            df.to_csv(os.path.dirname(__file__) + r'\static\temp\players.csv')
+            return players
+        else:
+            return pandas.read_csv(os.path.dirname(__file__) + r'\static\temp\players.csv', header = None, index_col=0).to_dict()
+    
+    def get_players_filter_data(self):
+        teams = []
+        for k, v in self.get_players().items():
+            if v['editorial_team_abbr'].upper() not in teams:
+                teams.append(v['editorial_team_abbr'].upper())
+        teams.sort()
+        return {'teams': teams, 'positions':['QB','RB','WR','TE','FLEX','DEF','K']}
+
+    def get_players_filter(self, pos=None, team=None, player=None):
+        players = {}
+        if pos + team + player == '':
+            return self.get_players()
+        for k, v in self.get_players().items():
+            if pos != '':
+                if v['display_position'] == pos:
+                    if team != '':
+                        if v['editorial_team_abbr'].upper() == team:
+                            if player != '':
+                                if match_name(player.lower(), v['last_name'].lower(), v['first_name'].lower()):
+                                    players[k] = v
+                            else:
+                                players[k] = v
+                    elif player != '':
+                        if match_name(player.lower(), v['last_name'].lower(), v['first_name'].lower()):
+                            players[k] = v
+                    else:
+                        players[k] = v
+            elif team != '':
+                if v['editorial_team_abbr'].upper() == team:
+                    if player != '':
+                        if match_name(player.lower(), v['last_name'].lower(), v['first_name'].lower()):
+                            players[k] = v
+                    else:
+                        players[k] = v
+            else:
+                if match_name(player.lower(), v['last_name'].lower(), v['first_name'].lower()):
+                    players[k] = v
+        if len(players) == 0:
+            return self.get_players()
+        return players
+    
+    def get_teams_temp(self):
+        if not os.path.isfile(os.path.dirname(__file__) + r'\static\temp\teams.csv'):
+            data = self.get_documents('team')
+            df = pandas.DataFrame(data)
+            df.to_csv(os.path.dirname(__file__) + r'\static\temp\teams.csv')
+            return data
+        else:
+            return pandas.read_csv(os.path.dirname(__file__) + r'\static\temp\teams.csv', index_col=0).to_dict()
+        
+    def get_team_data(self, team_id):
+        data = self.get_document('team', str(team_id))
+        data.update(self.get_document('standings', str(team_id)))
+        data['points_week'] = int(data['points_for']) / int(self.get_week())
+        return data
+
+
+
+
+
 

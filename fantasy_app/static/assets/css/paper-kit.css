@@ -1004,7 +1004,6 @@
 .btn:not(:disabled):not(.disabled).active,
 .btn:not(:disabled):not(.disabled).active:focus,
 .show>.btn.dropdown-toggle {
-  /*background-color: #403D39;*/
   background-color: #ffffff;
   color: #FFFFFF;
   border-color: #ffffff;
@@ -1123,9 +1122,9 @@ fieldset[disabled] .btn.active {
   background-color: #55acee;
   border-color: #55acee;
   color: #FFFFFF;
-  opacity: .8;
+  opacity: .75;
   filter: alpha(opacity=100);
-  border-radius: 30px;
+  
 }
 
 .btn-primary:hover,
@@ -1175,8 +1174,9 @@ fieldset[disabled] .btn-primary:focus,
 fieldset[disabled] .btn-primary.focus,
 fieldset[disabled] .btn-primary:active,
 fieldset[disabled] .btn-primary.active {
-  background-color: #34b5b8;
-  border-color: #34b5b8;
+  background-color: #55acee;
+  border-color: #55acee;
+  opacity: .5;
 }
 
 .btn-primary.btn-link {
@@ -2722,9 +2722,9 @@ textarea.form-control {
 .pagination>li:last-child>a,
 .pagination>li:last-child>span {
   background-color: transparent;
-  border: 2px solid #f5593d;
+  border: 2px solid #FF8F5E;
   border-radius: 20px;
-  color: #f5593d;
+  color: #FF8F5E;
   height: 36px;
   margin: 0 2px;
   min-width: 36px;
@@ -3039,15 +3039,15 @@ textarea.form-control {
 .pagination>li.active>span:hover,
 .pagination>li.active>a:focus,
 .pagination>li.active>span:focus {
-  background-color: #f5593d;
-  border-color: #f5593d;
+  background-color: #FF8F5E;
+  border-color: #FF8F5E;
   color: #FFFFFF;
 }
 
 .page-item.active .page-link {
-  background-color: #f5593d;
+  background-color: #FF8F5E;
   color: white;
-  border-color: #f5593d;
+  border-color: #FF8F5E;
 }
 
 .nav-pills .nav-link {
@@ -3444,7 +3444,7 @@ input[type="file"]>input[type="button"]::-moz-focus-inner {
 */
 .bg-primary {
   background-color: #55acee !important;
-  opacity: .9;
+
   /*background-image: linear-gradient(to right,#55acee, #ffffff) !important;*/
 }
 
@@ -4373,8 +4373,9 @@ License - nucleoapp.com/license/
 
 .nav-tabs .dropdown-menu .dropdown-item:hover,
 .nav-tabs .dropdown-menu .dropdown-item.active {
-  color: #FFFFFF;
-  background-color: #68B3C8;
+  color: #FFFFFF !important;
+  background-color: #55acee;
+  opacity: .8;
 }
 
 .nav-tabs .dropdown-menu :before {
@@ -5257,273 +5258,6 @@ License - nucleoapp.com/license/
 
 .tooltip.show {
   opacity: 1 !important;
-}
-
-.popover {
-  border: 0;
-  border-radius: 4px;
-  background-color: #FFFFFF;
-  color: #66615b;
-  font-weight: 400;
-  padding: 0;
-  z-index: 1031;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  text-align: center;
-}
-
-.popover-header {
-  background-color: #FFFCF5;
-  border-bottom: 0 none;
-  font-size: 15px;
-  font-weight: normal;
-  line-height: 22px;
-  padding: 15px 15px 0px 15px;
-  margin: 0;
-  color: #66615b;
-  text-align: center;
-  border-radius: 4px 4px 0 0;
-  margin-bottom: -10px;
-}
-
-.popover-header {
-  background-color: #FFFFFF !important;
-  text-align: center;
-}
-
-.popover-body {
-  padding: 15px;
-  text-align: center;
-}
-
-.popover .arrow {
-  border: 0;
-}
-
-.popover.top .arrow {
-  margin-left: 0;
-}
-
-.popover.bottom .arrow:after {
-  border-bottom-color: #f7765f;
-}
-
-.popover-filter {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1030;
-  background-color: #000000;
-  opacity: 0;
-  filter: alpha(opacity=0);
-  visibility: hidden;
-  transition: visibility 0s linear 0.3s, opacity 0.3s linear;
-}
-
-.popover-filter.in {
-  visibility: visible;
-  opacity: 0.2;
-  filter: alpha(opacity=20);
-  transition-delay: 0s;
-}
-
-.popover.left>.arrow::after {
-  border-left-color: #f7765f;
-  bottom: -20px;
-}
-
-.popover.top>.arrow::after {
-  border-top-color: #f7765f;
-}
-
-.popover.right>.arrow::after {
-  border-right-color: #f7765f;
-}
-
-.popover.left::before {
-  border-left-color: #f7765f;
-  bottom: -20px;
-}
-
-.popover-filter.in {
-  visibility: visible;
-  opacity: 0.2;
-  filter: alpha(opacity=20);
-  transition-delay: 0s;
-}
-
-.popover-primary {
-  background-color: #6dd3d6;
-  color: #FFFFFF;
-}
-
-.popover-primary .popover-title {
-  background-color: #6dd3d6;
-  color: rgba(0, 0, 0, 0.56);
-}
-
-.popover-primary.bottom .arrow:after {
-  border-bottom-color: #6dd3d6;
-}
-
-.popover-primary.left>.arrow::after {
-  border-left-color: #6dd3d6;
-}
-
-.popover-primary.top>.arrow::after {
-  border-top-color: #6dd3d6;
-}
-
-.popover-primary.right>.arrow::after {
-  border-right-color: #6dd3d6;
-}
-
-.popover-info {
-  background-color: #6ec7e0;
-  color: #FFFFFF;
-}
-
-.popover-info .popover-title {
-  background-color: #6ec7e0;
-  color: rgba(0, 0, 0, 0.56);
-}
-
-.popover-info.bottom .arrow:after {
-  border-bottom-color: #6ec7e0;
-}
-
-.popover-info.left>.arrow::after {
-  border-left-color: #6ec7e0;
-}
-
-.popover-info.top>.arrow::after {
-  border-top-color: #6ec7e0;
-}
-
-.popover-info.right>.arrow::after {
-  border-right-color: #6ec7e0;
-}
-
-.popover-success {
-  background-color: #86d9ab;
-  color: #FFFFFF;
-}
-
-.popover-success .popover-title {
-  background-color: #86d9ab;
-  color: rgba(0, 0, 0, 0.56);
-}
-
-.popover-success.bottom .arrow:after {
-  border-bottom-color: #86d9ab;
-}
-
-.popover-success.left>.arrow::after {
-  border-left-color: #86d9ab;
-}
-
-.popover-success.top>.arrow::after {
-  border-top-color: #86d9ab;
-}
-
-.popover-success.right>.arrow::after {
-  border-right-color: #86d9ab;
-}
-
-.popover-warning {
-  background-color: #fcd27b;
-  color: #FFFFFF;
-}
-
-.popover-warning .popover-title {
-  background-color: #fcd27b;
-  color: rgba(0, 0, 0, 0.56);
-}
-
-.popover-warning.bottom .arrow:after {
-  border-bottom-color: #fcd27b;
-}
-
-.popover-warning.left>.arrow::after {
-  border-left-color: #fcd27b;
-}
-
-.popover-warning.top>.arrow::after {
-  border-top-color: #fcd27b;
-}
-
-.popover-warning.right>.arrow::after {
-  border-right-color: #fcd27b;
-}
-
-.popover-danger {
-  background-color: #f7765f;
-  color: #FFFFFF;
-}
-
-.popover-danger .popover-title {
-  background-color: #f7765f;
-  color: rgba(0, 0, 0, 0.56);
-}
-
-.popover-danger.bottom .arrow:after {
-  border-bottom-color: #f7765f;
-}
-
-.popover-danger.left>.arrow::after {
-  border-left-color: #f7765f;
-}
-
-.popover-danger.top>.arrow::after {
-  border-top-color: #f7765f;
-}
-
-.popover-danger.right>.arrow::after {
-  border-right-color: #f7765f;
-}
-
-.popover-primary.bs-tether-element-attached-bottom::after,
-.popover-primary.bs-tether-element-attached-bottom::before,
-.popover-primary.popover-top::after,
-.popover-primary.popover-top::before {
-  border-top-color: #6dd3d6 !important;
-}
-
-.popover.popover-info.bs-tether-element-attached-top::after,
-.popover.popover-info.popover-bottom::after,
-.popover.popover-info.bs-tether-element-attached-top::before,
-.popover.popover-info.popover-bottom::before {
-  border-bottom-color: #6ec7e0 !important;
-}
-
-.popover-success.bs-tether-element-attached-left::after,
-.popover-success.bs-tether-element-attached-left::before,
-.popover-success.popover-right::after,
-.popover-success.popover-right::before {
-  border-right-color: #86d9ab !important;
-}
-
-.popover.popover-warning.bs-tether-element-attached-right::after,
-.popover.popover-warning.bs-tether-element-attached-right::before,
-.popover.popover-warning.popover-left::after,
-.popover.popover-warning.popover-left::before {
-  border-left-color: #fcd27b !important;
-}
-
-.popover.popover-danger.bs-tether-element-attached-right::after,
-.popover.popover-danger.bs-tether-element-attached-right::before,
-.popover.popover-danger.popover-left::after,
-.popover.popover-danger.popover-left::before {
-  border-left-color: #f7765f !important;
-}
-
-.popover.bs-tether-element-attached-top::after,
-.popover.popover-bottom::after,
-.popover.bs-tether-element-attached-top::before,
-.popover.popover-bottom::before {
-  border-bottom-color: #fff !important;
 }
 
 .modal-header {
@@ -7821,7 +7555,7 @@ License - nucleoapp.com/license/
   .dropdown.show .dropdown-menu .dropdown-item a:focus,
   .dropdown .dropdown-menu .dropdown-item a:hover,
   .dropdown .dropdown-menu .dropdown-item a:focus {
-    color: #403D39;
+    color: #55acee;
   }
   .dropdown.show .dropdown-menu:before,
   .dropdown.show .dropdown-menu:after,
@@ -7911,172 +7645,6 @@ License - nucleoapp.com/license/
   }
   .form-control+.form-control-feedback {
     padding-left: 0 !important;
-  }
-}
-
-@media screen and (min-width: 991px) {
-  .burger-menu .navbar-collapse {
-    position: fixed;
-    display: block;
-    top: 0;
-    height: 100%;
-    width: 230px;
-    right: 0px;
-    z-index: 1032;
-    visibility: visible;
-    background-color: #999;
-    overflow-y: visible;
-    border-top: none;
-    text-align: left;
-    border-left: 1px solid #CCC5B9;
-    padding-right: 0px;
-    padding-left: 40px;
-    padding-top: 15px;
-    -webkit-transform: translateX(230px);
-    -moz-transform: translateX(230px);
-    -o-transform: translateX(230px);
-    -ms-transform: translateX(230px);
-    transform: translateX(230px);
-    -webkit-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -moz-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -o-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -ms-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-  }
-  .burger-menu .navbar-collapse .navbar-nav .nav-item:last-child {
-    border-bottom: 0;
-  }
-  .burger-menu .navbar-collapse .navbar-nav {
-    height: 100%;
-    z-index: 2;
-    position: relative;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-  }
-  .burger-menu .navbar-collapse::after {
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-color: #FFFCF5;
-    background-image: linear-gradient(to bottom, transparent 0%, rgba(112, 112, 112, 0) 60%, rgba(186, 186, 186, 0.15) 100%);
-    display: block;
-    content: "";
-    z-index: 1;
-  }
-  .burger-menu .navbar-collapse.has-image::after {
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-color: rgba(17, 17, 17, 0.8);
-    display: block;
-    content: "";
-    z-index: 1;
-  }
-  .burger-menu .navbar .container .navbar-toggler {
-    display: block;
-    margin-top: 20px;
-  }
-  .burger-menu .navbar-translate {
-    width: 100%;
-    position: relative;
-    -webkit-transform: translateX(0);
-    -moz-transform: translateX(0);
-    -o-transform: translateX(0);
-    -ms-transform: translateX(0);
-    transform: translateX(0);
-    -webkit-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -moz-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -o-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -ms-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-  }
-  .burger-menu .wrapper {
-    -webkit-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -moz-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -o-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    -ms-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
-    left: 0;
-    background-color: white;
-  }
-  .burger-menu .body .navbar-collapse.collapse {
-    height: 100vh !important;
-  }
-  .burger-menu .navbar-collapse:before,
-  .burger-menu .navbar-collapse:after,
-  .burger-menu .navbar-nav:before,
-  .burger-menu .navbar-nav:after {
-    display: table;
-    content: " ";
-  }
-  .nav-open .burger-menu .navbar-collapse.collapse {
-    -webkit-transform: translateX(0px);
-    -moz-transform: translateX(0px);
-    -o-transform: translateX(0px);
-    -ms-transform: translateX(0px);
-    transform: translateX(0px);
-  }
-  .nav-open .burger-menu .wrapper {
-    left: 0;
-    -webkit-transform: translateX(-230px);
-    -moz-transform: translateX(-230px);
-    -o-transform: translateX(-230px);
-    -ms-transform: translateX(-230px);
-    transform: translateX(-230px);
-  }
-  .nav-open .burger-menu .navbar-translate {
-    -webkit-transform: translateX(-230px);
-    -moz-transform: translateX(-230px);
-    -o-transform: translateX(-230px);
-    -ms-transform: translateX(-230px);
-    transform: translateX(-230px);
-  }
-  .burger-menu .dropdown.show .dropdown-menu,
-  .burger-menu .dropdown .dropdown-menu {
-    border: 0;
-    transition: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    width: auto;
-  }
-  .burger-menu .dropdown.show .dropdown-menu .dropdown-item:hover,
-  .burger-menu .dropdown.show .dropdown-menu .dropdown-item:focus,
-  .burger-menu .dropdown .dropdown-menu .dropdown-item:hover,
-  .burger-menu .dropdown .dropdown-menu .dropdown-item:focus {
-    background-color: transparent;
-    border-radius: 0;
-  }
-  .burger-menu .dropdown.show .dropdown-menu .dropdown-item a:hover,
-  .burger-menu .dropdown.show .dropdown-menu .dropdown-item a:focus,
-  .burger-menu .dropdown .dropdown-menu .dropdown-item a:hover,
-  .burger-menu .dropdown .dropdown-menu .dropdown-item a:focus {
-    color: #403D39;
-  }
-  .burger-menu .dropdown.show .dropdown-menu:before,
-  .burger-menu .dropdown.show .dropdown-menu:after,
-  .burger-menu .dropdown .dropdown-menu:before,
-  .burger-menu .dropdown .dropdown-menu:after {
-    display: none;
-  }
-  .burger-menu .dropdown .dropdown-menu {
-    display: none;
-  }
-  .burger-menu .dropdown.show .dropdown-menu {
-    display: block;
-  }
-  .lightbox .modal-dialog {
-    width: 960px;
   }
 }
 
@@ -8246,7 +7814,17 @@ License - nucleoapp.com/license/
   padding: 8px;
   background-size:cover;
 }
-
+#round-lg { 
+  border-radius: 85px;
+  border-color: transparent;
+  opacity: .9;
+  height: 75px;
+  width: 75px;
+  min-width: 75px;
+  padding: 8px;
+  background-size:cover;
+  vertical-align: middle; 
+}
 .thead-primary
 {
   background-color: #55acee !important;
@@ -8286,7 +7864,6 @@ License - nucleoapp.com/license/
   margin-left: 3px;
 }
 .btn-create:hover {
-  /*background-color: #55acee;*/
   border-color: #55acee;
 }
 
@@ -8303,4 +7880,76 @@ License - nucleoapp.com/license/
   line-height: 1.5em;
   padding: 0px 8px;
   display: inline-block;
+}
+
+.bootstrap-select .bs-ok-default::after {
+  width: 0.3em;
+  height: 0.6em;
+  border-width: 0 0.1em 0.1em 0;
+  transform: rotate(45deg) translateY(0.5rem);
+}
+
+.btn.dropdown-toggle:focus {
+  outline: none !important;
+}
+
+.side {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.active-primary input[type=text]:focus:not([readonly]) {
+  border: 2px solid #55acee !important;
+}
+
+.active-primary {
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    color: #66615b;
+    font-size: 14px;
+    transition: background-color 0.3s ease 0s;
+    margin-right: 0px !important;
+    padding: 7px 12px;
+    height: 40px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#form-col{
+  position:relative;
+  width:100%;
+  padding-right:5px !important;
+  padding-left:5px !important;
+}
+
+#form-group-sm-marg {
+  position: relative;
+  margin-left: 0px !important;
+}
+
+.teams-title{
+  font-size: 1.825em;
+  line-height: 1.4;
+  margin: 0px;
+  font-weight: 375;
+}
+
+.teams-name{
+  font-size: 1.4em;
+  line-height: 1.1em;
+  margin: 0px;
+  text-transform: uppercase;
+}
+
+.teams-other{
+  font-size: 1.15em;
+  font-weight: 350;
+  line-height: 1.5em;
+  margin-bottom: 5px;
+}
+.teams-detail{
+  font-size: 0.8em;
+  font-weight: 400;
+  line-height: 1.5em;
 }

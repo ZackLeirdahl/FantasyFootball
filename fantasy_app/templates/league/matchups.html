@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<div class="card no-transition">
+    <div class="card-header">
+        <form id="weekForm" method="post" novalidate>
+            <label for="weekSelect">Week</label>
+            <div class="col-sm-1" id="form-col" style="display: inline-block">
+                <select class="custom-select" name="week" id="weekSelect">
+                    {% if week != None %}
+                    <option>{{week}}</option>
+                    {% endif %}
+                    {% for w in weeks %}
+                    <option>{{w}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+<div>
 <div id="accordion" role="tablist" aria-multiselectable="true">
     <div class="card no-transition">
         {% for matchup in matchups %}
@@ -18,55 +34,49 @@
                         </div>
                     </div>
                 </h5>
+                <div class="progress">
+                    <div class="progress-bar {{matchup[0]['class']}}" id="{{matchup[0]['nickname']}}progress" role="progressbar" style="width: {{matchup[0]['percent_chance']}}; opacity: {{matchup[0]['opacity']}}">{{matchup[0]['percent_chance']}} chance</div>
+                    <div class="progress-bar {{matchup[1]['class']}}" id="{{matchup[1]['nickname']}}progress" role="progressbar" style="width: {{matchup[1]['percent_chance']}}; opacity: {{matchup[1]['opacity']}}">{{matchup[1]['percent_chance']}} chance</div>
+                </div>
             </a>
         </div>
-        <div class="progress">
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{matchup[0]['percent_chance']}}">{{matchup[0]['percent_chance']}} chance</div>
-            <div class="progress-bar bg-info" role="progressbar" style="width: {{matchup[1]['percent_chance']}}">{{matchup[1]['percent_chance']}} chance</div>
-        </div>
         {% if matchup[0]['nickname'] == g.user['nickname'] or matchup[1]['nickname'] == g.user['nickname'] %}
-        <div id="{{matchup[0]['nickname']}}" class="collapse show" role="tabpanel"  aria-labelledby="headingOne">
+        <div id="{{matchup[0]['nickname']}}" class="collapse show" role="tabpanel"  aria-labelledby="headingOne" style="width: 100%">
         {% else %}
-        <div id="{{matchup[0]['nickname']}}" class="collapse" role="tabpanel"  aria-labelledby="headingOne">
+        <div id="{{matchup[0]['nickname']}}" class="collapse" role="tabpanel"  aria-labelledby="headingOne" style="width: 100%">
         {% endif %}
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-5">
-                        <table class="table table-hover table-borderless">
-                            <thead class="thead-primary">
-                                <tr>
-                                    <th scope="col">Stats</th>
-                                    <th scope="col">Player</th>
-                                    <th scope="col">Projected</th>
-                                    <th scope="col">Points</th>
-                                </tr>
-                            </thead>
+        <div class="card-body">
+            <div class="row" style="width: 100%; margin-left: 2px;">
+                    <table class="table table-hover table-borderless">
+                        <thead class="thead-primary">
                             <tr>
-                                <td>Alfreds Futterkiste</td>
-                                <td>Maria Anders</td>
-                                <td>Germany</td>
-                                <td>United States</td>
+                                <th scope="col">Stats</th>
+                                <th scope="col">Player</th>
+                                <th scope="col">Projected</th>
+                                <th scope="col">Points</th>
+                                <th scope="col">(+/-)</th>
+                                <th scope="col"></th>
+                                <th scope="col">(+/-)</th>
+                                <th scope="col">Points</th>
+                                <th scope="col">Projected</th>
+                                <th scope="col">Player</th>
+                                <th scope="col">Stats</th>
                             </tr>
-                        </table>          
-                    </div>
-                    <div class="col-lg-5 offset-lg-1">
-                        <table class="table table-hover table-borderless">
-                            <thead class="thead-primary">
-                                <tr>
-                                    <th scope="col">Stats</th>
-                                    <th scope="col">Player</th>
-                                    <th scope="col">Projected</th>
-                                    <th scope="col">Points</th>
-                                </tr>
-                            </thead>
-                            <tr>
-                                <td>Alfreds Futterkiste</td>
-                                <td>Maria Anders</td>
-                                <td>Germany</td>
-                                <td>United States</td>
-                            </tr>
-                        </table>          
-                    </div>
+                        </thead>
+                        <tr>
+                            <td>196 Pass YDs, 2 Pass TD</td>
+                            <td>Andrew Luck</td>
+                            <td>18.26</td>
+                            <td>12.10</td>
+                            <td>+1.2</td>
+                            <td>QB</td>
+                            <td>-1.2</td>
+                            <td>23.56</td>
+                            <td>20.06</td>
+                            <td>Baker Mayfield</td>
+                            <td>225 Pass Yds, 1 Pass TD, 42 Rush Yds</td>
+                        </tr>
+                    </table>          
                 </div>
             </div>
         </div>

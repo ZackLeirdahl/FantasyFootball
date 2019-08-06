@@ -1,10 +1,8 @@
 $(document).ready(function(){
 
     $("#teamsLink").hover(
-        function()
-        {
-            $("#teamsLink").dropdown('toggle');
-        },
+        function(){
+            $("#teamsLink").dropdown('toggle');},
         function(){}
     )
 
@@ -14,42 +12,70 @@ $(document).ready(function(){
 
     $("#profileLink").hover(
         function(){
-            $(this).dropdown('toggle');
-        },
+            $(this).dropdown('toggle');},
         function(){}
     )
 
     $("#profileDrop").mouseleave(function(){
         $("#profileLink").dropdown('toggle');
     })
+    
+    $('#positionFilter').hover(
+        function() {
+            $(this).addClass('focus');},
+        function() {
+            $(this).removeClass('focus');}
+    );
+
+    $('#weekSelect').on('change', function() {
+        document.forms['weekForm'].submit();
+     });
+
+     $("#tabs").tabs();
+
+     $("tbody").sortable({
+         items: "> tr",
+         appendTo: "parent",
+         helper: "clone"
+     }).disableSelection();
+ 
+     $("#tabs ul li a").droppable({
+         hoverClass: "drophover",
+         tolerance: "pointer",
+         drop: function(e, ui) {
+             var tabdiv = $(this).attr("href");
+             $(tabdiv + " table tr:last").after("<tr>" + ui.draggable.html() + "</tr>");
+             ui.draggable.remove();
+         }
+     });
 
     addFileName(document.getElementById('customFile'));
 });
 
 window.onload = function() {
-    var page = window.location.href.split('/').slice(-1)[0];
-    switch(page)
+    var links = window.location.href.split('/');
+    if (links.includes('matchups') || links.includes('matchups#'))
     {
-        case "matchups":
-            document.getElementById('matchupsLink').classList.add('active');
-            return;
-        case "standings":
-            document.getElementById('standingsLink').classList.add('active');
-            return;
-        case "feed":
-            document.getElementById('feedLink').classList.add('active');
-            return;
-        case "players":
-            document.getElementById('playersLink').classList.add('active');
-            return;
-        case "weekly_awards":
-            document.getElementById('weeklyLink').classList.add('active');
-            return;
-        case "teams":
-            document.getElementById('teamsLink').classList.add('active');
-            return;
-    }}
+        document.getElementById('matchupsLink').classList.add('active');
+    }
+    if (links.includes('standings') || links.includes('standings#'))
+    {
+        document.getElementById('standingsLink').classList.add('active');
+    }
+    if (links.includes('feed') || links.includes('feed#'))
+    {
+        document.getElementById('feedLink').classList.add('active');
+    }
+    if (links.includes('players') || links.includes('players#'))
+    {
+        document.getElementById('playersLink').classList.add('active');
+    }
+    if (links.includes('teams') || links.includes('teams#'))
+    {
+        document.getElementById('teamsLink').classList.add('active');
+    }
 
+}
 function addFileName(cfile) {
     cfile.addEventListener('change', function () {
         document.getElementById('customFileLabel').innerText = event.srcElement.files[0].name;
@@ -82,15 +108,58 @@ function sendLike(id, action) {
     return jqXHR.responseText;
 }
 
-
-
 function collapse()
 {
     $('.collapse').collapse('hide');
 }
-
-
-
-
-
     
+function initSliders() {
+    var slide = $('.noUi-origin');
+    var position = slide.position();
+    var percent = parseFloat(position.left) / 390;
+    alert(percent);
+}
+
+$(function () {
+    $('.selectpicker').selectpicker();
+});
+
+function paginate()
+{
+    var recordPerPage = 25;
+    if(($('#pagedTable').find('tbody tr:has(td)').length / recordPerPage) > 9)
+    {
+        recordPerPage = Math.ceil($('#pagedTable').find('tbody tr:has(td)').length/10);
+    }
+    var totalPages = Math.ceil($('#pagedTable').find('tbody tr:has(td)').length / recordPerPage);
+    var $pages = $('<ul class="pagination justify-content-center"></ul>');
+    for (i = 0; i < totalPages; i++) {
+        $('<li class="page-item"><a class="page-link" href="#">&nbsp;' + (i + 1) + '</a></li>').appendTo($pages);
+    }
+    $pages.appendTo('#playersPage');
+
+    $('.page-link').hover(
+        function() {
+            $(this).addClass('focus');},
+        function() {
+            $(this).removeClass('focus');}
+    );
+
+    $('table').find('tbody tr:has(td)').hide();
+    var tr = $('table tbody tr:has(td)');
+    for (var i = 0; i <= recordPerPage - 1; i++) {
+        $(tr[i]).show();
+    }
+   
+    $('.page-link').click(function(event) {
+        $('#pagedTable').find('tbody tr:has(td)').hide();
+        for (var i = ($(this).text() - 1) * recordPerPage; i <= $(this).text() * recordPerPage - 1; i++) {
+            $(tr[i]).show();}
+    });
+}
+function enableButton(btn_id){
+    if(document.getElementById(btn_id).disabled == true)
+    {
+        document.getElementById(btn_id).disabled = false;
+    }
+}

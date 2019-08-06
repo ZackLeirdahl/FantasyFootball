@@ -1,44 +1,51 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<div class="page-header" style="background-image: url('/static/images/homepage.jpg');">
-  <div class="filter"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-4 ml-auto mr-auto">
-        <div class="card card-register">
-          <h3 class="title mx-auto">Welcome</h3>
-          <div class="social-line text-center">
-            <a href="#pablo" class="btn btn-neutral btn-facebook btn-just-icon">
-              <i class="fa fa-facebook-square"></i>
-            </a>
-            <a href="#pablo" class="btn btn-neutral btn-google btn-just-icon">
-              <i class="fa fa-google-plus"></i>
-            </a>
-            <a href="#pablo" class="btn btn-neutral btn-twitter btn-just-icon">
-              <i class="fa fa-twitter"></i>
-            </a>
-          </div>
-          <form class="register-form">
-            <label>Email</label>
-            <input type="text" class="form-control" placeholder="Email">
-            <label>Password</label>
-            <input type="password" class="form-control" placeholder="Password">
-            <button class="btn btn-danger btn-block btn-round">Register</button>
+<div class="modal " id="betModal" tabindex="-1" role="dialog" aria-labelledby="betModalLabel" aria-hidden="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="betModalLabel">Bet Proposal</h5>
+        </div>
+        <div class="modal-body">
+          <form id="bet" method="post" novalidate>
+            <div class="input-group">
+              <label class="col-sm-2 control-label">Players</label>
+              <div class="col-sm-10">
+              <select multiple data-style="btn btn-link dropdown-toggle" id="playersDrop" class="selectpicker w-100">
+                  <option>United Kingdom</option>
+                  <option>United States</option>
+                  <option>France</option>
+                  <option>Germany</option>
+                  <option>Italy</option>
+              </select>
+            </div>
+              <br>
+              <label class="col-sm-2 control-label">Amount</label>
+              <div class="col-sm-6">
+                <select data-style="btn btn-link dropdown-toggle" id="amountDrop" class="selectpicker w-100">
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                  <option>25</option>
+                </select>
+              </div>
+            </div>
           </form>
-          <div class="forgot">
-            <a href="#" class="btn btn-link btn-danger">Forgot password?</a>
+        </div>
+        <div class="modal-footer">
+          <div class="left-side">
+            <button type="submit" formaction="{{ url_for('blog.create') }}" form="create" class="btn btn-success btn-link">Save</button>
+          </div>
+          <div class="divider"></div>
+          <div class="right-side">
+            <button type="button" data-dismiss="modal" class="btn btn-danger btn-link">Nevermind</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="footer register-footer text-center">
-    <h6>©
-      <script>
-        document.write(new Date().getFullYear())
-      </script>, made with <i class="fa fa-heart heart"></i> by Creative Tim</h6>
-  </div>
-</div>
 <!--   <div class="card bg-dark text-white">
       <img class="card-img" src="\static\images\federico-beccari.jpg" alt="Card image">
       <div class="card-img-overlay">
@@ -205,4 +212,8 @@
       <span class="sr-only">Next</span>
     </a>
   </div>-->
+
+<div id="sliderRegular" class="slider" onmouseup="initSliders()"></div>
+<br>
+<div id="sliderDouble" class="slider slider-primary"></div>
 {% endblock %}

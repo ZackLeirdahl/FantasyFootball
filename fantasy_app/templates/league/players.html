@@ -5,6 +5,72 @@
 {% endblock %}
 
 {% block content %}
-
+<body onpageshow="paginate()">
+<div class="card no-transition">
+    <div class="card-header">
+        <form id="playerSearchForm" method="post" novalidate>
+            <div class="form-group row" id="form-group-sm-marg">
+                <div class="col-sm-2" id="form-col">
+                    <select class="custom-select" name="position" onchange="enableButton('playerFilterBtn')">
+                        {% if filters['position'] != None %}
+                        <option>{{position}}</option>
+                        <option value=""></option>
+                        {% else %}
+                        <option value="">Position</option>
+                        {% endif %}
+                        {% for p in filter_data['positions'] %}
+                            {% if p != position %}
+                            <option>{{p}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-2" id="form-col">
+                    <select class="custom-select" name="team" onchange="enableButton('playerFilterBtn')">
+                        {% if filters['team'] != None %}
+                        <option>{{team}}</option>
+                        <option value=""></option>
+                        {% else %}
+                        <option value="">Team</option>
+                        {% endif %}
+                        {% for t in filter_data['teams'] %}
+                            {% if team != t %}
+                            <option>{{t}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-2" id="form-col">
+                    {% if filters['player'] != None %}
+                        <input class="active-primary" id="playerFilter" type="text" aria-label="Search" name="player" value="{{player}}" onchange="enableButton('playerFilterBtn')">
+                    {% else %}
+                        <input class="active-primary" id="playerFilter" type="text" placeholder="Last Name" aria-label="Search" name="player" onchange="enableButton('playerFilterBtn')">
+                    {% endif %}
+                </div>
+                <button type="submit" formaction="{{ url_for('league.players') }}" form="playerSearchForm" class="btn btn-primary" style="margin-left:-10px;" id="playerFilterBtn" disabled>Filter</button>
+            </div>
+        </form>
+    </div>
+<div>
+<table id="pagedTable" class="table table-hover table-borderless">
+    <thead class="thead-primary">
+        <tr>
+            <th scope="col">Position</th>
+            <th scope="col">Team</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">First Name</th>
+        </tr>
+    </thead>
+    {% for k,v in players.items() %}
+    <tr>
+        <td>{{v['display_position']}}</td>
+        <td>{{v['editorial_team_abbr']}}</td>
+        <td>{{v['last_name']}}</td>
+        <td>{{v['first_name']}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<nav aria-label='pager' id='playersPage'></nav>
+</body>
 
 {% endblock %}

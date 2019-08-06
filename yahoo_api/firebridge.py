@@ -1,10 +1,10 @@
-import firebase_admin, os
+import firebase_admin, os, pandas
 from firebase_admin import credentials, firestore
 from api import YahooFantasyAPI
 
 class Firebridge(YahooFantasyAPI):
     def __init__(self, connect = True):
-        firebase_admin.initialize_app(credentials.Certificate(r'fantasy_app/static/auth/firebase_auth.json'))
+        firebase_admin.initialize_app(credentials.Certificate('fantasy_app//static//auth//firebase_auth.json'))
         self.fb = firestore.client()
         if connect:
             YahooFantasyAPI.__init__(self)
@@ -25,9 +25,20 @@ class Firebridge(YahooFantasyAPI):
     def get_document_ids(self, collection):
         return [doc.id for doc in self.fb.collection(collection).get()]
 
+    def get_document(self, collection, key):
+        return self.fb.collection(collection).document(key).get().to_dict() 
+
     def update_teams(self):
         for k, v in self.get_user_data().items():
-            self.fb.update_document('team', k, v)
+            self.update_document('team', k, v)
+
+    def get_user_likes(self, userid='1'):
+        postids = []
+        for k in list(self.get_documents('likes').keys()):
+            k = k.split('-')
+            if k[0] == str(userid):
+                postids.append(k[1])
+        return postids
 
     def add_season_matchups(self, keys = []):
         for team_id in self.get_document_ids('team'):
@@ -74,8 +85,6 @@ class Firebridge(YahooFantasyAPI):
     
     def update_stat_categories(self):
         for k, v in self.get_stat_categories().items():
-            self.update_document('stat_categories', str(k), v)
-        for k, v in self.get_stat_modifiers().items():
             self.update_document('stat_categories', str(k), v)
     
     def add_roster_positions(self):

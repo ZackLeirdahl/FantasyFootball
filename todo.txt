@@ -1,32 +1,18 @@
-- delete comment
-- view post (with comments and likes)
-- team elements to include:
-    - waiver priority
-    - number of moves
-- make remember me work
-- sign in on register
-- different content forms:
-    - Text
-    - Video
-    - Image
-    - Poll
-    - Bets
+- Matchup View:
+    - Add matchup data for each team, and each week
+        - Player Name (First and Last)
+        - Projected
+        - Actual
+        - Position
+        - Stats
+        - players remaining
 
-- change index to feed
-- feed methods:
-    - New (each has their own form, and their own card)
-        - Post
-        - Video
-        - Image
-        - wager
-        - Poll
-    - give each method a button and a modal
+- Team View:
+    - Get team roster data ordered by pos, and starting v bench
+    - Have K and DEF with different stat categories
+    - Add a edit roster button that allows drag and drop capability
+    - Add save button to save changes
+    - Modal for add, drop, trade
 
-- create method to get which week of the season it is
-- login is a modal
-- add background threads to speed up data processing
-
-- make the opacity of the percent chance to win progress bar equivalent to the percent chance to win
-- fix the drop downs when feed is the route
-- home page is a dashboard
-
+- Players View:
+    - put in regex for searching players

@@ -13,7 +13,7 @@
   <button type="button" class="btn btn-create" data-toggle="modal" data-target="#uploadModal" title="Upload an image.">
     <img src="/static/images/image_upload.png"/>
   </button>
-  <button type="button" class="btn btn-create" data-toggle="modal" data-target="#uploadModal" title="Create a bet.">
+  <button type="button" class="btn btn-create" data-toggle="modal" data-target="#betModal" title="Create a bet.">
     <img src="/static/images/wager.png"/>
   </button>
   <button type="button" class="btn btn-create" data-toggle="modal" data-target="#uploadModal" title="Send a poll.">
@@ -84,6 +84,41 @@
         </div>
       </div>
     </div>
+    <!-- Bet Modal -->
+    <div class="modal fade" id="betModal" tabindex="-1" role="dialog" aria-labelledby="betModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="betModalLabel">Bet Proposal</h5>
+            </div>
+            <div class="modal-body">
+              <form id="bet" method="post" novalidate>
+                <div class="form-group row">
+                  <label>Amount</label>
+                  <select data-style="btn btn-primary" id="amountDrop" class="custom-select">
+                    {% for a in amounts %}
+                    <option>{{a}}</option>
+                    {% endfor %}
+                  </select>
+                  <label>Players</label>
+                  <select data-style="btn btn-primary" id="playersDrop" class="custom-select">
+                      <option>United Kingdom</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <div class="left-side">
+                <button type="submit" formaction="{{ url_for('blog.create') }}" form="create" class="btn btn-success btn-link">Save</button>
+              </div>
+              <div class="divider"></div>
+              <div class="right-side">
+                <button type="button" data-dismiss="modal" class="btn btn-danger btn-link">Nevermind</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   {% for post in posts %}
   <article class="post">
     {% if post['type'] == 'text' %}
@@ -91,7 +126,7 @@
     <div class="card" style="width: 40rem; margin-left: 10px;">
       <div class="card-body" style="float:left">
         <h4 class="card-title">
-        {% if g.user['id'] == post['author_id'] %}
+        {% if g.user['team_id'] == post['author_id'] %}
           <a class= "post_header" data-toggle="modal" data-target="#{{post['uid']}}updateText" href="#" >{{ post['title'] }}</a>
         {% else %}
           <a class= "post_header" href="#">{{ post['title'] }}</a>
@@ -121,8 +156,8 @@
       <div class="card" style="width: 40rem; margin-left: 10px;">
         <div class="card-body">
           <h4 class="card-title">
-            {% if g.user['id'] == post['author_id'] %}
-            <a class="post_header" data-toggle="modal" data-target="#updateFileModal" href="#" >
+            {% if g.user['team_id'] == post['author_id'] %}
+            <a class="post_header" data-toggle="modal" data-target="#{{post['uid']}}updateFileModal" href="#" >
               <img class="card-img-top" src="\static\upload\{{post['filename']}}">
             </a>
             {% else %}
@@ -158,12 +193,9 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="updateTextLabel">Edit Post</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
             </div>
             <div class="modal-body">
-              <form id="update" method="post" novalidate>
+              <form id="update{{post['uid']}}" method="post">
                 <div class="form-group-first">
                   <label for="titleInput">Title</label>
                   <input name="title" type="text" class ="form-control" id="titleInput" value="{{ post['title'] }}" />
@@ -171,53 +203,52 @@
                 <div class="form-group">
                   <label for="postBody">Body</label>
                   <textarea name="body" class="form-control" id="postBody" rows="3">{{ post['body'] }}</textarea>
+                  <input type="hidden" name="id" value="{{post['id']}}">
                 </div>
               </form>
             </div>
             <div class="modal-footer">
               <div class="left-side">
-                <button type="submit" formaction="{{ url_for('blog.update', id=post['id']) }}" form="update" class="btn btn-default btn-link">Save</button>
+                <button type="submit" form="update{{post['uid']}}" formaction="{{ url_for('blog.update') }}"  class="btn btn-success btn-link">Save</button>
               </div>
               <div class="divider"></div>
               <div class="right-side">
-                <button type="submit" formaction="{{ url_for('blog.delete', id=post['id']) }}" form="update" onclick="return confirm('Are you sure?');" class="btn btn-danger btn-link">Delete</button>
+                <button type="submit" form="update{{post['uid']}}" formaction="{{ url_for('blog.delete') }}"  onclick="return confirm('Are you sure?');" class="btn btn-danger btn-link">Delete</button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <!-- Update File Post Modal -->
-      <div class="modal fade" id="updateFileModal" tabindex="-1" role="dialog" aria-labelledby="updateFileModalLabel" aria-hidden="true">
+      <div class="modal fade" id="{{post['uid']}}updateFileModal" tabindex="-1" role="dialog" aria-labelledby="updateFileModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="updateFileModalLabel">Edit File</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
             </div>
             <div class="modal-body">
-              <form method="post" id="updateFile" enctype = "multipart/form-data">
+              <form id="updateFile{{post['uid']}}" method="post" enctype = "multipart/form-data">
                 <div class="input-group">
                   <div class="custom-file">
-                    <input type="file" name="file" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile">{{post['filename']}}</label>
+                    <input type="file" name="file" class="custom-file-input" id="customFileUpdate">
+                    <label class="custom-file-label" for="customFileUpdate">{{post['filename']}}</label>
                     <input type="hidden" name="filename" value="{{post['filename']}}">
+                    <input type="hidden" name="id" value="{{post['id']}}">
                   </div>
                 </div>
                 <br>
                 <div class="input-group">
-                  <textarea name="description" class="form-control" id="postBody" placeholder="Description" rows="3"> {{post['description']}}</textarea>
+                  <textarea name="description" class="form-control" id="postBody" rows="3">{{post['description']}}</textarea>
                 </div>
               </form>
             </div>
             <div class="modal-footer">
               <div class="left-side">
-                <button type="submit" formaction="{{ url_for('blog.uploadUpdate', id=post['id']) }}" form="updateFile" class="btn btn-success btn-link">Save</button>
+                <button type="submit" form="updateFile{{post['uid']}}" formaction="{{ url_for('blog.uploadUpdate') }}" class="btn btn-success btn-link">Save</button>
               </div>
               <div class="divider"></div>
               <div class="right-side">
-                <button type="submit" formaction="{{ url_for('blog.delete', id=post['id']) }}" form="updateFile" onclick="return confirm('Are you sure?');" class="btn btn-danger btn-link">Delete</button>
+                <button type="submit" form="updateFile{{post['uid']}}" formaction="{{ url_for('blog.delete') }}"  onclick="return confirm('Are you sure?');" class="btn btn-danger btn-link">Delete</button>
               </div>
             </div>
           </div>
@@ -255,5 +286,5 @@
     </div>
   </article>
   <script type="text/javascript" src="\static\assets\js\custom.js"></script>
-{% endfor %}
+  {% endfor %}
 {% endblock %}
