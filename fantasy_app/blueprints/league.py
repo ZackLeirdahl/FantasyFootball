@@ -14,7 +14,7 @@ def matchups():
         matchups = g.fd.get_matchups(week)
     else:
         matchups=g.fd.get_matchups()
-    return render_template('league/matchups.html', matchups=matchups, week=week, weeks=weeks)
+    return render_template('league/matchups.html', matchups=matchups, week=week, current_week=g.fd.get_week(), weeks=weeks)
 
 @bp.route('/standings', methods=('GET', 'POST'))
 @login_required
@@ -29,7 +29,8 @@ def teams(id):
 
 @bp.route('/players', methods=('GET', 'POST'))
 @login_required
-def players(filters = {'position': None, 'team': None, 'player': None}):
+def players():
+    filters = {'position': None, 'team': None, 'player': None}
     if request.method == "POST":
         if request.form['position'] != '':
             filters['position'] = request.form['position']
@@ -42,6 +43,11 @@ def players(filters = {'position': None, 'team': None, 'player': None}):
         players=g.fd.get_players()
     return render_template('league/players.html', players=players, filter_data=g.fd.get_players_filter_data(), filters=filters)
 
+@bp.route('/home', methods=('GET', 'POST'))
+@login_required
+def home():
+    return render_template('league/home.html')
+    
 @bp.route('/weekly_awards', methods=('GET', 'POST'))
 @login_required
 def weekly_awards():

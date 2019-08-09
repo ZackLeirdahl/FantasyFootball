@@ -1,4 +1,4 @@
-import firebase_admin, os, pandas
+import firebase_admin, os, pandas, datetime, time, math
 from firebase_admin import credentials, firestore
 from api import YahooFantasyAPI
 
@@ -30,6 +30,17 @@ class Firebridge(YahooFantasyAPI):
 
     def update_teams(self):
         for k, v in self.get_user_data().items():
+            self.update_document('team', k, v)
+
+    def update_matchup_keys(self):
+        week = self.get_week()
+        matchup_keys = {}
+        for k in self.get_documents('matchups').keys():
+            k_split = k.split('-')
+            if str(k_split[0]) == week:
+                matchup_keys[k_split[1]] = {'matchup_key':k}
+                matchup_keys[k_split[2]] = {'matchup_key':k}
+        for k, v in matchup_keys.items():
             self.update_document('team', k, v)
 
     def get_user_likes(self, userid='1'):
@@ -94,3 +105,11 @@ class Firebridge(YahooFantasyAPI):
     def update_roster_positions(self):
         for k, v in self.get_team_positions().items():
             self.update_document('roster_positions', k, v)
+    
+    def get_week(self):
+        today = datetime.date.today().toordinal()
+        week_one_end = datetime.date(2019,9,9).toordinal()
+        if today <= week_one_end:
+            return '1'
+        else:
+            return str(math.ceil((today - week_one_end)/7))

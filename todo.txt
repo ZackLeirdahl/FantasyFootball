@@ -13,6 +13,10 @@
     - Add a edit roster button that allows drag and drop capability
     - Add save button to save changes
     - Modal for add, drop, trade
+    - Denote that a player is a Keeper or not
+    - Add plot of points scored vs week in the top card view
+- Firebase
+    - implement queries for all methods (when applicable)
+    - add week in matchup get query
+    - add streak and average points to standings
 
-- Players View:
-    - put in regex for searching players

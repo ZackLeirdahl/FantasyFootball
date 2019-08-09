@@ -1,33 +1,41 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<div>
-    <table class="table table-hover table-borderless">
-        <thead class="thead-primary">
-            <tr>
-                <th></th>
-                <th scope="col">Rank</th>
-                <th scope="col">Record</th>
-                <th scope="col">Win Percentage</th>
-                <th scope="col">Points For</th>
-                <th scope="col">Points Against</th>
+<div style="padding:20px;">
+    <div class="card no-transition">
+        <table class="table table-hover sortable">
+            <thead class="thead-primary">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col" class="td-head-custom">Rank</th>
+                    <th scope="col" class="td-head-custom">Record</th>
+                    <th scope="col" class="td-head-custom">Win Percentage</th>
+                    <th scope="col" class="td-head-custom">Points For</th>
+                    <th scope="col" class="td-head-custom">Points Against</th>
+                    <th scope="col" class="td-head-custom">Points/Week</th>
+                    <th scope="col" class="td-head-custom">Streak</th>
+                </tr>
+            </thead>
+            {% for team in standings %}
+            <tr class="trow-custom">
+                <td class="td-custom">
+                    <a href="{{ url_for('league.teams', id=team['team_id']) }}">
+                        <img src="{{ team['image'] }}" id="round-sm" /> 
+                        <div class="side">
+                            <div class="td-custom">{{team['name']}}</div>
+                        </div>
+                    </a>
+                </td>
+                <td class="td-custom"><strong>{{team['rank']}}</strong></td>
+                <td class="td-custom">{{team['wins']}}-{{team['losses']}}-{{team['ties']}}</td>
+                <td class="td-custom">{{team['percentage']}}</td>
+                <td class="td-custom">{{team['points_for']}}</td>
+                <td class="td-custom">{{team['points_against']}}</td>
+                <td class="td-custom">110.54</td>
+                <td class="td-custom">L2</td>
             </tr>
-        </thead>
-        {% for team in standings %}
-        <tr>
-            <td>
-                <a class="standings-link" href="{{ url_for('league.teams', id=team['team_id']) }}">
-                    <img src="{{ team['image'] }}" id="round" /> {{team['name']}}
-                </a>
-            </td>
-            <td scope="row"><strong>{{team['rank']}}</strong></td>
-            <td>{{team['wins']}}-{{team['losses']}}-{{team['ties']}}</td>
-            <td>{{team['percentage']}}</td>
-            <td>{{team['points_for']}}</td>
-            <td>{{team['points_against']}}</td>
-        </tr>
-        {% endfor %}
-    </table>    
+            {% endfor %}
+        </table>    
+    </div>
 </div>
 
 {% endblock %}

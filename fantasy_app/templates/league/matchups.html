@@ -5,13 +5,14 @@
         <form id="weekForm" method="post" novalidate>
             <label for="weekSelect">Week</label>
             <div class="col-sm-1" id="form-col" style="display: inline-block">
-                <select class="custom-select" name="week" id="weekSelect">
+                <select class="custom-select" name="week" id="weekSelect" onchange="resetSelect(this.id,this.value,{{current_week}})">
                     {% if week != None %}
                     <option>{{week}}</option>
                     {% endif %}
                     {% for w in weeks %}
                     <option>{{w}}</option>
                     {% endfor %}
+                    <option>Current</option>
                 </select>
             </div>
         </form>
@@ -25,12 +26,60 @@
                 <h5 class="mb-0 panel-title">
                     <div class="row">
                         <div class="col">
-                            <img src="{{ matchup[0]['image'] }}" id="round" />
-                            {{ matchup[0]['name'] }}  {{ matchup[0]['team_points'] }}
+                            <div style="float: left;" >
+                                <div class="side">
+                                    <img src="{{ matchup[0]['image'] }}" id="round" />
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name">{{ matchup[0]['name'] }}</div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name"> | </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-actual">{{ matchup[0]['team_points'] }}</div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name"> | </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-projected">{{ matchup[0]['team_projected_points'] }} </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name"> | </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-remaining">9 players remaining</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col">
-                            <img src="{{ matchup[1]['image'] }}" id="round" />
-                            {{ matchup[1]['name'] }}  {{ matchup[1]['team_points'] }}
+                            <div style="float: right;" >
+                                <div class="side">
+                                    <div class="matchup-remaining">9 players remaining</div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name"> | </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-projected">{{ matchup[1]['team_projected_points'] }} </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name"> | </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-actual">{{ matchup[1]['team_points'] }}</div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name"> | </div>
+                                </div>
+                                <div class="side">
+                                    <div class="matchup-name">{{ matchup[1]['name'] }}</div>
+                                </div>
+                                <div class="side">
+                                    <img src="{{ matchup[1]['image'] }}" id="round" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </h5>
@@ -45,42 +94,57 @@
         {% else %}
         <div id="{{matchup[0]['nickname']}}" class="collapse" role="tabpanel"  aria-labelledby="headingOne" style="width: 100%">
         {% endif %}
-        <div class="card-body">
-            <div class="row" style="width: 100%; margin-left: 2px;">
-                    <table class="table table-hover table-borderless">
+        <div style="margin-left:15px; margin-right: 15px; margin-top:5px;">
+            <div class="card no-transition">
+                <div class="row" style="width: 100%; margin-left: 2px;">
+                    <table class="table table-hover">
                         <thead class="thead-primary">
                             <tr>
-                                <th scope="col">Stats</th>
-                                <th scope="col">Player</th>
-                                <th scope="col">Projected</th>
-                                <th scope="col">Points</th>
-                                <th scope="col">(+/-)</th>
-                                <th scope="col"></th>
-                                <th scope="col">(+/-)</th>
-                                <th scope="col">Points</th>
-                                <th scope="col">Projected</th>
-                                <th scope="col">Player</th>
-                                <th scope="col">Stats</th>
+                                <th scope="col" class="td-head-custom">Stats</th>
+                                <th scope="col" class="td-head-custom">Player</th>
+                                <th scope="col" class="td-head-custom">Projected</th>
+                                <th scope="col" class="td-head-custom">Points</th>
+                                <th scope="col" class="td-head-custom">(+/-)</th>
+                                <th scope="col" class="td-head-custom"></th>
+                                <th scope="col" class="td-head-custom">(+/-)</th>
+                                <th scope="col" class="td-head-custom">Points</th>
+                                <th scope="col" class="td-head-custom">Projected</th>
+                                <th scope="col" class="td-head-custom">Player</th>
+                                <th scope="col" class="td-head-custom">Stats</th>
                             </tr>
                         </thead>
-                        <tr>
-                            <td>196 Pass YDs, 2 Pass TD</td>
-                            <td>Andrew Luck</td>
-                            <td>18.26</td>
-                            <td>12.10</td>
-                            <td>+1.2</td>
-                            <td>QB</td>
-                            <td>-1.2</td>
-                            <td>23.56</td>
-                            <td>20.06</td>
-                            <td>Baker Mayfield</td>
-                            <td>225 Pass Yds, 1 Pass TD, 42 Rush Yds</td>
+                        <tr class="trow-custom">
+                            <td class="td-custom">196 Pass YDs, 2 Pass TD</td>
+                            <td class="td-custom">Andrew Luck</td>
+                            <td class="td-custom">18.26</td>
+                            <td class="td-custom">12.10</td>
+                            <td class="td-custom">+1.2</td>
+                            <td class="td-custom">QB</td>
+                            <td class="td-custom">-1.2</td>
+                            <td class="td-custom">23.56</td>
+                            <td class="td-custom">20.06</td>
+                            <td class="td-custom">Baker Mayfield</td>
+                            <td class="td-custom">225 Pass Yds, 1 Pass TD, 42 Rush Yds</td>
+                        </tr>
+                        <tr class="trow-custom">
+                            <td class="td-custom">4 Rec, 92 YDs</td>
+                            <td class="td-custom">Julio Jones</td>
+                            <td class="td-custom">19.88</td>
+                            <td class="td-custom">13.20</td>
+                            <td class="td-custom">+1.2</td>
+                            <td class="td-custom">WR</td>
+                            <td class="td-custom">-1.2</td>
+                            <td class="td-custom">21.36</td>
+                            <td class="td-custom">4.60</td>
+                            <td class="td-custom">Antonio Brown</td>
+                            <td class="td-custom">1 Rec, 36 Yds</td>
                         </tr>
                     </table>          
                 </div>
             </div>
         </div>
-        {% endfor %}
+    </div>
+    {% endfor %}
     </div>
 </div>
 {% endblock %}

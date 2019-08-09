@@ -11,40 +11,40 @@
         <form id="playerSearchForm" method="post" novalidate>
             <div class="form-group row" id="form-group-sm-marg">
                 <div class="col-sm-2" id="form-col">
-                    <select class="custom-select" name="position" onchange="enableButton('playerFilterBtn')">
+                    <select id="positionFilter" class="custom-select" name="position" onchange="enableButton('playerFilterBtn',this.id, this.value, 'Position')">
                         {% if filters['position'] != None %}
-                        <option>{{position}}</option>
-                        <option value=""></option>
+                        <option>{{filters['position']}}</option>
                         {% else %}
                         <option value="">Position</option>
                         {% endif %}
                         {% for p in filter_data['positions'] %}
-                            {% if p != position %}
+                            {% if p != filters['position'] %}
                             <option>{{p}}</option>
                             {% endif %}
                         {% endfor %}
+                        <option id="clearPosition">--Clear--</option>
                     </select>
                 </div>
                 <div class="col-sm-2" id="form-col">
-                    <select class="custom-select" name="team" onchange="enableButton('playerFilterBtn')">
+                    <select id="teamFilter" class="custom-select" name="team" onchange="enableButton('playerFilterBtn',this.id, this.value, 'Team')">
                         {% if filters['team'] != None %}
-                        <option>{{team}}</option>
-                        <option value=""></option>
+                        <option>{{filters['team']}}</option>
                         {% else %}
                         <option value="">Team</option>
                         {% endif %}
                         {% for t in filter_data['teams'] %}
-                            {% if team != t %}
+                            {% if filters['team'] != t %}
                             <option>{{t}}</option>
                             {% endif %}
                         {% endfor %}
+                        <option id="clearTeam">--Clear--</option>
                     </select>
                 </div>
                 <div class="col-sm-2" id="form-col">
                     {% if filters['player'] != None %}
-                        <input class="active-primary" id="playerFilter" type="text" aria-label="Search" name="player" value="{{player}}" onchange="enableButton('playerFilterBtn')">
+                        <input class="active-primary" id="playerFilter" type="text" aria-label="Search" name="player" value="{{filters['player']}}" onchange="enableButton('playerFilterBtn')">
                     {% else %}
-                        <input class="active-primary" id="playerFilter" type="text" placeholder="Last Name" aria-label="Search" name="player" onchange="enableButton('playerFilterBtn')">
+                        <input class="active-primary" id="playerFilter" type="text" placeholder="Player Name" aria-label="Search" name="player" onchange="enableButton('playerFilterBtn')">
                     {% endif %}
                 </div>
                 <button type="submit" formaction="{{ url_for('league.players') }}" form="playerSearchForm" class="btn btn-primary" style="margin-left:-10px;" id="playerFilterBtn" disabled>Filter</button>
@@ -52,25 +52,32 @@
         </form>
     </div>
 <div>
-<table id="pagedTable" class="table table-hover table-borderless">
+<div class="card no-transition" style="padding-top:15px;">
+<table id="pagedTable" class="table table-hover sortable">
     <thead class="thead-primary">
         <tr>
+            <th scope="col"></th>
+            <th scope="col">Name</th>
             <th scope="col">Position</th>
             <th scope="col">Team</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">First Name</th>
+            <th scope="col">Bye</th>
+            <th scope="col">Points</th>
+            <th scope="col">Status</th>
         </tr>
     </thead>
     {% for k,v in players.items() %}
-    <tr>
-        <td>{{v['display_position']}}</td>
-        <td>{{v['editorial_team_abbr']}}</td>
-        <td>{{v['last_name']}}</td>
-        <td>{{v['first_name']}}</td>
+    <tr class="trow-custom">
+        <td class="td-custom"><img src="\static\images\add.png" id="round-xs"/></td>
+        <td class="td-custom">{{v['first_name']}} {{v['last_name']}}</td>
+        <td class="td-custom">{{v['display_position']}}</td>
+        <td class="td-custom">{{v['editorial_team_abbr']}}</td>
+        <td class="td-custom">2</td>
+        <td class="td-custom">198.25</td>
+        <td class="td-custom">FA</td>
     </tr>
     {% endfor %}
 </table>
 <nav aria-label='pager' id='playersPage'></nav>
 </body>
-
+</div>
 {% endblock %}

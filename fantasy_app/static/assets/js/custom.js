@@ -2,7 +2,8 @@ $(document).ready(function(){
 
     $("#teamsLink").hover(
         function(){
-            $("#teamsLink").dropdown('toggle');},
+            $("#teamsLink").dropdown('toggle');
+        },
         function(){}
     )
 
@@ -50,6 +51,8 @@ $(document).ready(function(){
      });
 
     addFileName(document.getElementById('customFile'));
+
+
 });
 
 window.onload = function() {
@@ -157,9 +160,32 @@ function paginate()
             $(tr[i]).show();}
     });
 }
-function enableButton(btn_id){
+function enableButton(btn_id, select_id, selected, txt){
     if(document.getElementById(btn_id).disabled == true)
     {
         document.getElementById(btn_id).disabled = false;
+    }
+    resetSelect(select_id, selected, txt);
+}
+
+function resetSelect(select_id, selected, txt)
+{
+    if(selected == '--Clear--')
+    {
+        var selectBox = $("#" + select_id)[0];
+        var option = document.createElement("option");
+        option.value = '';
+        option.text = txt;
+        selectBox.options[0] = option;
+        option.selected = true;
+    }
+    if(selected == 'Current')
+    {
+        var selectBox = $("#" + select_id)[0];
+        var option = document.createElement("option");
+        option.value = txt;
+        option.text = txt;
+        selectBox.options[0] = option;
+        option.selected = true;
     }
 }

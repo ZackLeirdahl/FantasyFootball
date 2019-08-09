@@ -64,7 +64,7 @@ def like():
 def uploadUpdate():
     file = request.files['file']
     if check_extension(secure_filename(file.filename)):
-        file.save(os.path.join(g.upload_folder, secure_filename(file.filename)))
+        file.save(os.path.join('C:\\Users\\zleirdahl\\Documents\\GitHub\\FantasyFootball\\fantasy_app\\static\\upload', secure_filename(file.filename)))
         g.fd.update_document('posts',str(request.form['id']), {'filename': filename, 'description': request.form['description']})
     return redirect(url_for('blog.feed'))
 
@@ -73,7 +73,7 @@ def uploadUpdate():
 def upload():
     file = request.files['file']
     if check_extension(secure_filename(file.filename)):
-        file.save(os.path.join(g.upload_folder, secure_filename(file.filename)))
+        file.save(os.path.join('C:\\Users\\zleirdahl\\Documents\\GitHub\\FantasyFootball\\fantasy_app\\static\\upload', secure_filename(file.filename)))
         uid = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
         g.fd.add_post(data = {'author_id': str(g.user['team_id']),'uid': uid, 'name': g.user['name'], 'type':'image', 'time': time.mktime(datetime.datetime.today().timetuple()), 'description': request.form['description'], 'filename': file.filename, 'likes': 0, 'comments': 0})
     return redirect(url_for('blog.feed'))

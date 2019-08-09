@@ -6,8 +6,6 @@ from firebase_admin import credentials, firestore
 from firebase_admin import db as fb
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-
-
 @bp.before_app_request
 def load_logged_in_user():
     g.fd = Firedata()
@@ -18,8 +16,6 @@ def load_logged_in_user():
     else:
         g.user = g.fd.get_yahoo_user(session.get('username'))
         g.teams = g.fd.get_teams_temp()
-        g.upload_folder = 'C:\\Users\\zleirdahl\\Documents\\GitHub\\FantasyFootball\\fantasy_app\\static\\upload'
-
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register(error = None):

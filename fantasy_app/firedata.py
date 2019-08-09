@@ -5,9 +5,10 @@ from firebase_admin import db as fb
 
 def get_fdb():
     if (not len(firebase_admin._apps)):
-        firebase_admin.initialize_app(credentials.Certificate(os.path.dirname(__file__) + r'\static\auth\firebase_auth.json'), options= {'databaseURL': 'https://fantasyfootball-ee95c.firebaseio.com'})
-    if 'fb' not in g:
-        g.fb = firestore.client()
+        firebase_admin.initialize_app(credentials.Certificate(
+            os.path.dirname(__file__) + r'\static\auth\firebase_auth.json'), 
+            options= {'databaseURL': 'https://fantasyfootball-ee95c.firebaseio.com'})
+    g.fb = firestore.client()
     return g.fb
 
 def get_posttime_data(td):
@@ -55,6 +56,15 @@ class Firedata:
     def get_document(self, collection, key):
         return self.fb.collection(collection).document(key).get().to_dict() 
 
+    def get_documents_simple_query(self, collection, value, operator, condition):
+        return {doc.id: doc.to_dict() for doc in self.fb.collection(collection).where(value, operator, condition).get()}
+
+    def get_documents_compound_query(self, collection, query_list):
+        col = self.fb.collection(collection)
+        for q in query_list:
+            col = col.where(q[0], q[1], q[2])
+        return {doc.id: doc.to_dict() for doc in col.get()}
+
     def generate_key(self, collection):
         if len(list(self.get_documents(collection).keys())) != 0:
             return str(int(max(list(self.get_documents(collection).keys()))) + 1)
@@ -84,9 +94,8 @@ class Firedata:
 
     def delete_post(self, id):
         self.remove_document('posts', str(id))
-        for k, v in self.get_documents('comments').items():
-            if v['postid'] == str(id):
-                self.remove_document('comments', k)
+        for doc in self.fb.collection('comments').where('postid','==',str(id)).get():
+            self.remove_document('comments', doc.id)
         for k in list(self.get_documents('likes').keys()):
             if k.split('-')[1] == str(id):
                 self.remove_document('likes', k)
@@ -149,6 +158,29 @@ class Firedata:
         if week == None:
             week = self.get_week()
         teams = self.get_documents('team')
+        for k, v in self.get_documents_simple_query('matchups','week','==',week).items():
+            team_ids = k.split('-')[1:3]
+            matchups.append(team_ids)
+            temp_matchup = []
+            for team_id in team_ids:
+                temp = v[team_id]
+                temp.update(teams[team_id])
+                temp_matchup.append(temp)
+            team_stats.append(temp_matchup)
+        for ts in team_stats:
+            ts[0]['percent_chance'] = str(ts[0]['win_probability'] * 100) +'%'
+            ts[1]['percent_chance'] = str(ts[1]['win_probability'] * 100) +'%'
+            if ts[1]['win_probability'] <= 0.5:
+                ts[1].update({'opacity': 0.5, 'class': 'bg-danger'})
+                ts[0].update({'opacity': ts[0]['win_probability'], 'class': 'bg-success'})
+            else:
+                ts[0].update({'opacity': 0.5, 'class': 'bg-danger'})
+                ts[1].update({'opacity': ts[1]['win_probability'], 'class': 'bg-success'})
+        return team_stats
+
+    def get_matchup(self, key):
+        matchups = []
+        matchup = self.get_document('matchups', key)
         for k, v in self.get_documents('matchups').items():
             if k.split('-')[0] == week:
                 team_ids = k.split('-')[1:3]
@@ -249,15 +281,31 @@ class Firedata:
             return data
         else:
             return pandas.read_csv(os.path.dirname(__file__) + r'\static\temp\teams.csv', index_col=0).to_dict()
+    
+    def get_team_image(self, team_id):
+        return self.get_document('team', str(team_id))['image']
         
     def get_team_data(self, team_id):
         data = self.get_document('team', str(team_id))
         data.update(self.get_document('standings', str(team_id)))
         data['points_week'] = int(data['points_for']) / int(self.get_week())
+        matchup = self.get_document('matchups', data['matchup_key'])
+        team_ids = list(self.get_teams_temp().keys())
+        for k in matchup.keys():
+            if k in team_ids:
+                if k == team_id:
+                    data['self_matchup'] = matchup[k]
+                    data['self_matchup']['percent_chance'] = str(matchup[k]['win_probability'] * 100) +'%'
+                else:
+                    data['opponent_matchup'] = matchup[k]
+                    data['opponent_matchup']['team_id'] = k
+                    data['opponent_matchup']['percent_chance'] = str(matchup[k]['win_probability'] * 100) +'%'
+                    opponent = self.get_document('team', str(k))
+                    data['opponent_matchup']['image'] = opponent['image']
+                    data['opponent_matchup']['name'] = opponent['name']
         return data
 
-
-
-
+    def get_players_mult(self):
+        print(self.get_documents_compound_query('players',[['display_position','==','WR'],['editorial_team_abbr','==','NE']]))
 
 
